@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta tag para reducir errores de Tracking Prevention en scripts externos -->
+    <meta name="referrer" content="no-referrer">
+    <title>Ruta de Transformación Cultural</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .content-fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
+      }
+      .confetti-container {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none; overflow: hidden; z-index: 9999;
+      }
+      .confetti {
+        position: absolute; width: 10px; height: 20px;
+        opacity: 0; animation: confetti-fall 4s linear forwards;
+      }
+      @keyframes confetti-fall {
+        0% { transform: translateY(-10vh) rotateZ(0deg); opacity: 1; }
+        100% { transform: translateY(110vh) rotateZ(720deg); opacity: 0; }
+      }
+      .onboarding-highlight {
+        position: fixed;
+        border-radius: 8px;
+        box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.8);
+        transition: all 0.4s ease-in-out;
+        pointer-events: none;
+        z-index: 1000;
+      }
+      .onboarding-tooltip {
+        position: fixed;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        width: 90%;
+        max-width: 400px;
+        transition: all 0.4s ease-in-out;
+        z-index: 1001;
+      }
+       .animate-spin { animation: spin 1s linear infinite; }
+      @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      select:invalid { color: #64748b; }
+      option { color: #1e293b; }
+      details>summary { list-style: none; }
+      details>summary::-webkit-details-marker { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div id="root"></div>
+    
+    <!-- Scripts para React, ReactDOM y Babel Standalone -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <!-- Babel con data-no-cache para evitar errores de Tracking Prevention en Edge/Chrome -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" data-no-cache></script>
+
+    <!-- Tu script de aplicación, ahora procesado por Babel -->
+    <script type="text/babel">
+        const { createContext, useState, useEffect, useContext, useCallback, useMemo, useRef, useLayoutEffect, StrictMode, cloneElement } = React;
+
+        // --- Icons and Badges ---
+        const RecognitionIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} {...props}><path strokeLinecap="round" strokeLinejoin="round" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.085a2 2 0 00-1.736.97l-2.714 4.222a2 2 0 00.175 2.573l3.586 3.586m7-10l-3.5 7" /></svg>;
+        const LeadershipIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} {...props}><path strokeLinecap="round" strokeLinejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>;
+        const AgilityIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} {...props}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>;
+        const LearningIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} {...props}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>;
+        const EmpowermentIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} {...props}><path strokeLinecap="round" strokeLinejoin="round" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" /></svg>;
+        const SafetyIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} {...props}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.917L12 22l9-1.083A12.02 12.02 0 0021 12.083" /></svg>;
+        const FirstStepsBadgeIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 20 20" fill="currentColor" {...props}><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" /></svg>;
+        const PillarExplorerBadgeIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 20 20" fill="currentColor" {...props}><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>;
+        const CultureChampionBadgeIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 20 20" fill="currentColor" {...props}><path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd" /><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-8a1 1 0 10-2 0v2a1 1 0 102 0v-2zm2-1a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1z" /></svg>;
+        const IntegrityKudosIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}><path fillRule="evenodd" d="M10 2a.75.75 0 01.73.53l3.05 6.1a.75.75 0 010 .74l-3.05 6.1A.75.75 0 0110 18a.75.75 0 01-.73-.53l-3.05-6.1a.75.75 0 010-.74L9.27 2.53A.75.75 0 0110 2zm0 1.5L7.5 9.625 10 16.5l2.5-6.875L10 3.5z" clipRule="evenodd" /></svg>;
+        const TransparencyKudosIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}><path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" /><path fillRule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.18l3.75-7.03a1.65 1.65 0 012.918 0l3.75 7.03a1.65 1.65 0 01-2.918 0L8 8.411v2.852a1 1 0 102 0V8.41l-1.164 2.18a1.65 1.65 0 01-2.918 0l-3.75-7.03a1.65 1.65 0 012.918 0L8 8.411v2.852a1 1 0 102 0V8.41l-1.164 2.18a1.65 1.65 0 01-2.918 0z" clipRule="evenodd" /></svg>;
+        const ContinuousImprovementKudosIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}><path fillRule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201-4.42 5.5 5.5 0 011.583-4.42 5.5 5.5 0 018.913 4.545 3.5 3.5 0 11-1.296 4.295zM10 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 9a1 1 0 112 0 1 1 0 01-2 0z" /></svg>;
+        const RespectKudosIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 5a1 1 0 00-1 1v1a1 1 0 001 1h1a1 1 0 001-1V6a1 1 0 00-1-1H7zM6 11a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm6-5a1 1 0 00-1 1v1a1 1 0 001 1h1a1 1 0 001-1V6a1 1 0 00-1-1h-1z" /></svg>;
+        const CommitmentKudosIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1.25-5.25a.75.75 0 001.5 0v-2.5a.75.75 0 00-1.5 0v2.5z" /><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z" /><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm-5.25-6.25a.75.75 0 01.75-.75h2.5a.75.75 0 010 1.5h-2.5a.75.75 0 01-.75-.75z" /><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1.75-6.25a.75.75 0 000-1.5h2.5a.75.75 0 000 1.5h-2.5z" /></svg>;
+        const AgileMindsetKudosIcon = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.75 9.25a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-4.5z" clipRule="evenodd" /></svg>;
+        
+        const BADGES = {
+            'first_activity': { id: 'first_activity', name: 'Primeros pasos', description: 'Completaste tu primera actividad.', icon: <FirstStepsBadgeIcon/>, colorClasses: 'bg-green-600 text-white', iconColorClasses: 'text-white' },
+            'pillar_reconocimiento': { id: 'pillar_reconocimiento', name: 'Maestro del reconocimiento', description: 'Completaste todas las actividades de Reconocimiento.', icon: <PillarExplorerBadgeIcon />, colorClasses: 'bg-blue-600 text-white', iconColorClasses: 'text-white' },
+            'pillar_liderazgo': { id: 'pillar_liderazgo', name: 'Líder ejemplar', description: 'Completaste todas las actividades de Liderazgo.', icon: <PillarExplorerBadgeIcon />, colorClasses: 'bg-purple-600 text-white', iconColorClasses: 'text-white' },
+            'pillar_agilidad': { id: 'pillar_agilidad', name: 'Campeón de la agilidad', description: 'Completaste todas las actividades de Agilidad.', icon: <PillarExplorerBadgeIcon />, colorClasses: 'bg-green-600 text-white', iconColorClasses: 'text-white' },
+            'pillar_aprendizaje': { id: 'pillar_aprendizaje', name: 'Pionero del aprendizaje', description: 'Completaste todas las actividades de Aprendizaje.', icon: <PillarExplorerBadgeIcon />, colorClasses: 'bg-yellow-600 text-white', iconColorClasses: 'text-white' },
+            'pillar_empoderamiento': { id: 'pillar_empoderamiento', name: 'Constructor de confianza', description: 'Completaste todas las actividades de Empoderamiento.', icon: <PillarExplorerBadgeIcon />, colorClasses: 'bg-red-600 text-white', iconColorClasses: 'text-white' },
+            'pillar_seguridad': { id: 'pillar_seguridad', name: 'Guardián de la seguridad', description: 'Completaste todas las actividades de Seguridad Psicológica.', icon: <PillarExplorerBadgeIcon />, colorClasses: 'bg-teal-600 text-white', iconColorClasses: 'text-white' },
+            'all_pillars': { id: 'all_pillars', name: 'Campeón cultural', description: 'Completaste todas las actividades de todos los ejes.', icon: <CultureChampionBadgeIcon/>, colorClasses: 'bg-slate-800 text-yellow-400', iconColorClasses: 'text-yellow-400' },
+        };
+        const KUDOS_BADGES = {
+            'Integridad': { icon: <IntegrityKudosIcon />, colorClasses: 'bg-blue-100 text-blue-800' },
+            'Transparencia': { icon: <TransparencyKudosIcon />, colorClasses: 'bg-teal-100 text-teal-800' },
+            'Mejora continua': { icon: <ContinuousImprovementKudosIcon />, colorClasses: 'bg-yellow-100 text-yellow-800' },
+            'Respeto': { icon: <RespectKudosIcon />, colorClasses: 'bg-green-100 text-green-800' },
+            'Compromiso y empoderamiento': { icon: <CommitmentKudosIcon />, colorClasses: 'bg-red-100 text-red-800' },
+            'Mentalidad ágil': { icon: <AgileMindsetKudosIcon />, colorClasses: 'bg-purple-100 text-purple-800' },
+        };
+        const DB_NAME = 'bccr-fs-db';
+        const STORE_NAME = 'file-handles';
+        const KEY = 'directory-handle';
+        function getDb() {
+          return new Promise((resolve, reject) => {
+            if (!('indexedDB' in window)) {
+              reject('IndexedDB not supported');
+              return;
+            }
+            try {
+                const request = indexedDB.open(DB_NAME, 1);
+                request.onerror = () => reject("Error opening IndexedDB.");
+                request.onsuccess = () => resolve(request.result);
+                request.onupgradeneeded = (event) => {
+                  const db = (event.target).result;
+                  if (!db.objectStoreNames.contains(STORE_NAME)) {
+                    db.createObjectStore(STORE_NAME);
+                  }
+                };
+            } catch (e) {
+                reject("Error accessing IndexedDB (Security/Privacy restrictions).");
+            }
+          });
+        }
+        async function setDirectoryHandle(handle) {
+          const db = await getDb();
+          return new Promise((resolve, reject) => {
+            const transaction = db.transaction(STORE_NAME, 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.put(handle, KEY);
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject("Failed to save directory handle.");
+          });
+        }
+        async function getDirectoryHandle() {
+          try {
+            const db = await getDb();
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(STORE_NAME, 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.get(KEY);
+                request.onsuccess = () => resolve(request.result || null);
+                request.onerror = () => reject("Failed to retrieve directory handle.");
+            });
+          } catch (e) {
+            console.log("Skipping auto-load due to database restriction.");
+            return null;
+          }
+        }
+        async function deleteDirectoryHandle() {
+          const db = await getDb();
+          return new Promise((resolve, reject) => {
+            const transaction = db.transaction(STORE_NAME, 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.delete(KEY);
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject("Failed to delete directory handle.");
+          });
+        }
+
+        // --- Context ---
+        const AuthContext = createContext(undefined);
+        const BACKUP_FILENAME = 'Cultura_Respaldo.txt';
+        const AuthProvider = ({ children }) => {
+          const [userName, setUserName] = useState(() => localStorage.getItem('bccr-user-name'));
+          const [division, setDivision] = useState(() => localStorage.getItem('bccr-user-division'));
+          const [email, setEmail] = useState(() => localStorage.getItem('bccr-user-email'));
+          const [showOnboarding, setShowOnboarding] = useState(false);
+          const [isLoading, setIsLoading] = useState(true);
+          useEffect(() => {
+            if (userName) {
+                setIsLoading(false);
+                return;
+            }
+            const tryAutoLoad = async () => {
+                try {
+                    if (!('showDirectoryPicker' in window)) {
+                        console.log("File System Access API not supported. Skipping auto-load.");
+                        setIsLoading(false);
+                        return;
+                    }
+                    const dirHandle = await getDirectoryHandle();
+                    if (!dirHandle) {
+                        setIsLoading(false);
+                        return; 
+                    }
+                    if ((await dirHandle.queryPermission({ mode: 'readwrite' })) !== 'granted') {
+                        setIsLoading(false);
+                        return;
+                    }
+                    const fileHandle = await dirHandle.getFileHandle(BACKUP_FILENAME, { create: false });
+                    const file = await fileHandle.getFile();
+                    const fileContent = await file.text();
+                    if (!fileContent.trim()) throw new Error("Backup file is empty.");
+                    const decodedString = decodeURIComponent(escape(atob(fileContent.trim())));
+                    const importedObject = JSON.parse(decodedString);
+                    if (importedObject.appId !== 'cultura-org-2024' && importedObject.appId !== 'bccr-cultura-2024' || !importedObject.data) {
+                        throw new Error("Invalid backup file.");
+                    }
+                    const { data } = importedObject;
+                    if (typeof data.userName !== 'string' || typeof data.points !== 'number') {
+                        throw new Error("Corrupted backup file data.");
+                    }
+                    localStorage.setItem('bccr-user-name', data.userName);
+                    localStorage.setItem('bccr-user-division', data.division || '');
+                    localStorage.setItem('bccr-user-email', data.email || '');
+                    localStorage.setItem('gamification-points', JSON.stringify(data.points || 0));
+                    localStorage.setItem('gamification-completed', JSON.stringify(data.completedActivities || []));
+                    localStorage.setItem('gamification-badges', JSON.stringify(data.badges || []));
+                    localStorage.setItem('bccr-culture-goals', JSON.stringify(data.goals || []));
+                    localStorage.setItem('kudos-board', JSON.stringify(data.kudos || []));
+                    localStorage.setItem('bccr-onboarding-completed', 'true');
+                    window.location.reload();
+                } catch (error) {
+                    if (!(error instanceof DOMException && error.name === 'NotFoundError')) {
+                         console.error("Auto-load from custom path failed:", error);
+                    }
+                    setIsLoading(false);
+                }
+            };
+            tryAutoLoad();
+          }, [userName]);
+          const login = useCallback((name, division, email) => {
+            if (name.trim() && division.trim() && email.trim()) {
+              const trimmedName = name.trim();
+              const trimmedDivision = division.trim();
+              const trimmedEmail = email.trim();
+              localStorage.setItem('bccr-user-name', trimmedName);
+              localStorage.setItem('bccr-user-division', trimmedDivision);
+              localStorage.setItem('bccr-user-email', trimmedEmail);
+              setUserName(trimmedName);
+              setDivision(trimmedDivision);
+              setEmail(trimmedEmail);
+
+              (async () => {
+                const dirHandle = await getDirectoryHandle();
+                if (!localStorage.getItem('bccr-onboarding-completed') && !dirHandle) {
+                    setShowOnboarding(true);
+                } else if (dirHandle) {
+                    localStorage.setItem('bccr-onboarding-completed', 'true');
+                }
+              })();
+            }
+          }, []);
+          const completeOnboarding = useCallback(() => {
+            setShowOnboarding(false);
+            localStorage.setItem('bccr-onboarding-completed', 'true');
+          }, []);
+          const logout = useCallback(async () => {
+            if (window.confirm('¿Estás SEGURO de que quieres cerrar sesión? Se borrará TODO tu progreso de este navegador. Esta acción es irreversible.')) {
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('bccr-') || key.startsWith('gamification-') || key === 'kudos-board') {
+                        localStorage.removeItem(key);
+                    }
+                });
+                try {
+                    await deleteDirectoryHandle();
+                } catch (err) {
+                    console.error("Could not forget directory on logout:", err);
+                }
+                window.location.reload();
+            }
+          }, []);
+          const value = useMemo(() => ({
+            userName,
+            division,
+            email,
+            login,
+            logout,
+            showOnboarding,
+            completeOnboarding,
+          }), [userName, division, email, login, logout, showOnboarding, completeOnboarding]);
+          if (isLoading) {
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-slate-50">
+                    <div className="text-center p-8">
+                        <svg className="mx-auto h-12 w-12 text-blue-500 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <h2 className="mt-4 text-xl font-semibold text-slate-700">Verificando progreso...</h2>
+                        <p className="text-slate-500">Buscando respaldo automático.</p>
+                    </div>
+                </div>
+            );
+          }
+          return (
+            <AuthContext.Provider value={value}>
+              {children}
+            </AuthContext.Provider>
+          );
+        };
+        const useAuth = () => {
+          const context = useContext(AuthContext);
+          if (context === undefined) {
+            throw new Error('useAuth must be used within an AuthProvider');
+          }
+          return context;
+        };
+        
+        const PerfectionGame = () => {
+            const [score, setScore] = useState(7);
+            const [positive, setPositive] = useState('');
+            const [improvements, setImprovements] = useState('');
+            const [submitted, setSubmitted] = useState(false);
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setSubmitted(true);
+            };
+            if (submitted) {
+                return (
+                    <div className="text-center p-4 bg-green-50 rounded-lg">
+                        <h4 className="font-bold text-green-800">¡Feedback Enviado!</h4>
+                        <p className="text-sm text-green-700">Gracias por practicar la retroalimentación constructiva.</p>
+                        <button onClick={() => setSubmitted(false)} className="mt-2 text-sm text-blue-600 hover:underline">Dar otro feedback</button>
+                    </div>
+                );
+            }
+            return (
+                <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-slate-800">Simulador: perfection game</h4>
+                    <p className="text-sm text-slate-600">Practica dando feedback sobre un entregable o desempeño.</p>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label htmlFor="score" className="block text-sm font-medium text-slate-700">1. Califica de 1 a 10 (¿qué tan bueno es?)</label>
+                            <div className="flex items-center space-x-4 mt-1">
+                                <input id="score" type="range" min="1" max="10" value={score} onChange={(e) => setScore(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" />
+                                <span className="font-bold text-blue-600 text-lg w-10 text-center">{score}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="positive" className="block text-sm font-medium text-slate-700">2. ¿Qué te gustó para darle esa puntuación de {score}?</label>
+                            <textarea id="positive" value={positive} onChange={e => setPositive(e.target.value)} rows={2} className="mt-1 w-full p-2 border border-slate-300 rounded-md"></textarea>
+                        </div>
+                        <div>
+                            <label htmlFor="improvements" className="block text-sm font-medium text-slate-700">3. ¿Qué mejoras concretas harían falta para que fuera un 10?</label>
+                            <textarea id="improvements" value={improvements} onChange={e => setImprovements(e.target.value)} rows={2} className="mt-1 w-full p-2 border border-slate-300 rounded-md"></textarea>
+                        </div>
+                        <button type="submit" className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                            Simular entrega de feedback
+                        </button>
+                    </form>
+                </div>
+            );
+        };
+        
+        const KudosBoard = () => {
+            const { userName, email } = useAuth();
+            const { completeActivity, completedActivities, addPoints, celebration, clearCelebration } = useGamification();
+            const [kudos, setKudos] = useState(() => {
+                const saved = localStorage.getItem('kudos-board');
+                return saved ? JSON.parse(saved) : [];
+            });
+            const [to, setTo] = useState('');
+            const [from, setFrom] = useState(userName || '');
+            const [message, setMessage] = useState('');
+            const [value, setValue] = useState('Integridad');
+            const [isSending, setIsSending] = useState(false);
+            const [showBonusCelebration, setShowBonusCelebration] = useState(false);
+
+            useEffect(() => {
+                localStorage.setItem('kudos-board', JSON.stringify(kudos));
+            }, [kudos]);
+            useEffect(() => {
+                if(userName) {
+                    setFrom(userName);
+                }
+            }, [userName]);
+            useEffect(() => {
+                if(showBonusCelebration) {
+                   const timer = setTimeout(() => setShowBonusCelebration(false), 3000);
+                   return () => clearTimeout(timer);
+                }
+            }, [showBonusCelebration]);
+
+            const addKudo = (kudoData) => {
+                const newKudo = { ...kudoData, timestamp: Date.now() };
+                setKudos(currentKudos => [newKudo, ...currentKudos]);
+            };
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!to || !from || !message) {
+                    alert('Por favor, completa todos los campos antes de enviar.');
+                    return;
+                }
+                addKudo({ to, from, message, value });
+                
+                if (!completedActivities.has('rec_kudos')) {
+                    completeActivity('rec_kudos', 25, 'Pizarra de Kudos');
+                } else {
+                    addPoints(5);
+                    setShowBonusCelebration(true);
+                }
+
+                setTo('');
+                setMessage('');
+            };
+            const handleTeamsSubmit = (e) => {
+                e.preventDefault();
+                if (!to || !from || !message) {
+                    alert('Por favor, completa todos los campos antes de enviar.');
+                    return;
+                }
+                const receptorCorreo = window.prompt('Para reconocer en Teams, por favor introduce el correo electrónico del destinatario:');
+                if (!receptorCorreo || !receptorCorreo.trim()) {
+                    alert('Acción cancelada. No se ha enviado el reconocimiento a Teams.');
+                    return;
+                }
+                const kudoData = { to, from, message, value };
+                addKudo(kudoData);
+                
+                if (!completedActivities.has('rec_kudos')) {
+                    completeActivity('rec_kudos', 25, 'Pizarra de Kudos');
+                } else {
+                    addPoints(5);
+                    setShowBonusCelebration(true);
+                }
+
+                setTo('');
+                setMessage('');
+                alert('¡Kudo guardado en la pizarra! Se ha iniciado el envío de la notificación a Teams.');
+                const payload = {
+                    emisor: userName,
+                    emisorCorreo: email,
+                    receptor: kudoData.to,
+                    receptorCorreo: receptorCorreo.trim(),
+                    mensaje: kudoData.message,
+                    valor: kudoData.value,
+                };
+                setIsSending(true);
+                fetch('https://default618d0a4525a646189f808f70a435ee.52.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5e581bdc6778428494ef0916bf5277e4/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qKxJIITAa13mVcG72vTzs0WH__n_tP7_dBqrpe3xUxQ', {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    body: JSON.stringify(payload),
+                }).catch(error => {
+                    console.error('Error al iniciar la solicitud a Teams:', error);
+                }).finally(() => {
+                    setIsSending(false);
+                });
+            };
+            const bankValues = Object.keys(KUDOS_BADGES);
+            const selectedBadge = KUDOS_BADGES[value];
+            return (
+                <div className="space-y-6 relative">
+                    {showBonusCelebration && (
+                        <div className="absolute top-0 left-0 right-0 z-10 flex justify-center -mt-12 pointer-events-none">
+                            <div className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-bold shadow-lg animate-bounce">
+                                ¡+5 Puntos por reconocer!
+                            </div>
+                        </div>
+                    )}
+                    <div>
+                        <h3 className="text-lg font-semibold text-slate-800">Deja tu reconocimiento</h3>
+                        <form className="mt-4 space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input type="text" value={from} onChange={e => setFrom(e.target.value)} placeholder="De: (Tu nombre)" required className="w-full p-2 border border-slate-300 rounded-md bg-slate-100" readOnly />
+                                <input type="text" value={to} onChange={e => setTo(e.target.value)} placeholder="Para: (Nombre del colega)" required className="w-full p-2 border border-slate-300 rounded-md" />
+                            </div>
+                            <textarea value={message} onChange={e => setMessage(e.target.value)} placeholder="Tu mensaje de reconocimiento..." rows={3} required className="w-full p-2 border border-slate-300 rounded-md"></textarea>
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                <div className="flex items-center gap-3">
+                                    <select value={value} onChange={e => setValue(e.target.value)} className="w-full md:w-auto p-2 border border-slate-300 rounded-md bg-white">
+                                        {bankValues.map(v => <option key={v} value={v}>Valor: {v}</option>)}
+                                    </select>
+                                    {selectedBadge && (
+                                        selectedBadge.icon.type === 'img' ? (
+                                            <div className="flex-shrink-0">
+                                                {cloneElement(selectedBadge.icon, { className: 'h-12' })}
+                                            </div>
+                                        ) : (
+                                            <div className={`flex-shrink-0 p-2 rounded-full ${selectedBadge.colorClasses}`}>
+                                                {cloneElement(selectedBadge.icon, { className: 'h-6 w-6' })}
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                                <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                                    <button type="button" onClick={handleSubmit} className="flex-1 bg-blue-600 text-white font-bold py-2 px-6 rounded-md hover:bg-blue-700 transition-colors">
+                                        Guardar en pizarra
+                                    </button>
+                                    <button type="button" disabled={true} title="Funcionalidad temporalmente inhabilitada" className="flex-1 bg-purple-600 text-white font-bold py-2 px-6 rounded-md hover:bg-purple-700 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed">
+                                        Reconocer en Teams
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-slate-800">Reconocimientos recientes</h3>
+                        {kudos.length === 0 ? (
+                            <p className="text-slate-500 text-center py-4">¡Sé el primero en dejar un reconocimiento!</p>
+                        ) : (
+                            <div className="max-h-80 overflow-y-auto space-y-4 pr-2">
+                                {kudos.map((kudo) => {
+                                    const badgeInfo = KUDOS_BADGES[kudo.value];
+                                    return (
+                                        <div key={kudo.timestamp} className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                                            <p className="text-slate-700">"{kudo.message}"</p>
+                                            <div className="mt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                                                <span className="text-sm text-slate-500"><strong>De:</strong> {kudo.from} | <strong>Para:</strong> {kudo.to}</span>
+                                                {badgeInfo && (
+                                                    badgeInfo.icon.type === 'img' ? (
+                                                        <div className="inline-flex items-center">
+                                                            {cloneElement(badgeInfo.icon, { className: 'h-10' })}
+                                                        </div>
+                                                    ) : (
+                                                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold ${badgeInfo.colorClasses}`}>
+                                                            {cloneElement(badgeInfo.icon, { className: 'h-5 w-5' })}
+                                                            <span>{kudo.value}</span>
+                                                        </div>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+        
+        const pillarsData = [
+          { id: 'reconocimiento', title: 'Reconocimiento', icon: <RecognitionIcon/>, color: 'text-blue-600', description: 'Fomentar una cultura de aprecio y valoración constante.', longDescription: 'Este eje busca crear un ambiente donde el reconocimiento sea una práctica diaria y genuina. Se enfoca en valorar tanto los grandes logros como los esfuerzos cotidianos, conectando el aprecio con los valores fundamentales de la organización.', behaviors: ['Agradecer y reconocer públicamente el buen trabajo.', 'Especificar el comportamiento observado y su impacto positivo.', 'Fomentar el feedback positivo entre pares.', 'Celebrar los éxitos del equipo y los aprendizajes de los fracasos.'], activities: [{ id: 'rec_kudos', title: 'Pizarra de Kudos', description: 'Un espacio interactivo para dejar agradecimientos y reconocimientos, especificando el valor de la organización observado. ¡Participa y reconoce a tus compañeros!', type: 'interactive', points: 25, interactiveElement: <KudosBoard/>, hideCompletionButton: true }, { id: 'rec_fortalezas', title: 'Fortalezas del equipo', description: 'Una actividad para identificar y reforzar lo positivo del equipo. En una reunión, cada miembro escribe una fortaleza que ve en los demás.', type: 'group', points: 15 }, { id: 'rec_mentoring', title: 'Mentoring express y reverso', description: 'Organiza sesiones informales de 30 minutos para compartir experiencias y buenas prácticas. Practica el "Mentoring Reverso", donde colaboradores más jóvenes comparten sus conocimientos sobre nuevas tecnologías o tendencias con los más experimentados.', type: 'practice', points: 20 }, { id: 'rec_feedback', title: 'Guía de feedback positivo', description: 'Practica dar reconocimiento efectivo con estos 3 pasos: 1) Di que quieres reconocer algo. 2) Expresa cuál comportamiento específico observaste, cuándo y dónde. 3) Comunica el impacto positivo que tuvo en ti o en el equipo.', type: 'reading', points: 10 }] },
+          { id: 'liderazgo', title: 'Liderazgo', icon: <LeadershipIcon/>, color: 'text-purple-600', description: 'Desarrollar líderes en todos los niveles de la organización.', longDescription: 'El liderazgo no es solo un rol, es una actitud. Este eje promueve la autogestión, la comunicación efectiva y la capacidad de guiar e inspirar a otros, sin importar la jerarquía. Se trata de tomar la iniciativa y ser un modelo a seguir.', behaviors: ['Autogestionar prioridades, tiempo y energía.', 'Definir objetivos claros y expectativas.', 'Fomentar reuniones efectivas y con propósito.', 'Brindar y solicitar feedback correctivo de manera constructiva.'], activities: [{ id: 'lid_autoevaluacion', title: 'Autogestión personal', description: 'Realiza un ejercicio de autoevaluación usando la Matriz de Eisenhower (Urgente/Importante) para organizar tus tareas de la semana. Reflexiona sobre dónde inviertes tu tiempo y energía.', type: 'practice', points: 15 }, { id: 'lid_objetivos', title: 'Claridad en proyectos', description: 'Para tu próximo proyecto, utiliza un administrador de tareas (Planner, Trello) para definir objetivos, responsabilidades y fechas de entrega claras para todo el equipo.', type: 'practice', points: 20 }, { id: 'lid_reuniones', title: 'Guía de reuniones efectivas', description: 'Aplica la guía: ANTES (objetivo, agenda), DURANTE (participación activa, foco) y DESPUÉS (minuta con acciones claras). Intenta moderar una reunión usando este método.', type: 'practice', points: 20 }, { id: 'lid_feedback', title: 'Solicitar feedback constructivo', description: 'Practica pedir retroalimentación con preguntas como: "¿Qué podría haber hecho diferente para mejorar el resultado?" o "¿Qué consejo me darías para la próxima vez?".', type: 'practice', points: 15 }] },
+          { id: 'agilidad', title: 'Agilidad', icon: <AgilityIcon/>, color: 'text-green-600', description: 'Promover la adaptabilidad, la mejora continua y la experimentación.', longDescription: 'La agilidad es la capacidad de responder al cambio de manera rápida y efectiva. Este eje impulsa la mejora continua a través de ciclos cortos de trabajo, experimentación y aprendizaje constante a partir de la retroalimentación.', behaviors: ['Enfocarse en la entrega de valor temprano y continuo.', 'Abrazar el cambio y adaptarse a nuevas prioridades.', 'Colaborar estrechamente con equipos multidisciplinarios.', 'Reflexionar periódicamente sobre cómo ser más efectivos.'], activities: [{ id: 'agi_experimento', title: 'Mi primer experimento', description: 'Usa una plantilla simple para definir un pequeño objetivo de mejora, una hipótesis de cómo lograrlo y una acción concreta a realizar. Mide el resultado y comparte el aprendizaje.', type: 'interactive', points: 25, interactiveElement: <p>Proximamente un formulario interactivo.</p> }, { id: 'agi_perfection', title: 'Perfection game para feedback', description: 'Usa esta herramienta para dar feedback sobre un entregable. Pide permiso, califica de 1 a 10, explica qué te gustó para esa puntuación y sugiere mejoras concretas para llegar al 10.', type: 'interactive', points: 20, interactiveElement: <PerfectionGame/> }, { id: 'agi_retrospectiva', title: 'Cuadrante de la retrospectiva', description: 'En equipo, reflexionen sobre un proyecto reciente usando 4 cuadrantes: ¿Qué salió bien?, ¿Qué podríamos mejorar?, Nuevas ideas, y Reconocimientos.', type: 'group', points: 20 }, { id: 'agi_kata', title: 'Toyota Kata para mejora continua', description: 'Lee sobre el modelo Toyota Kata (Estado Actual, Estado Futuro, Obstáculos, Próximo Paso) y aplícalo para analizar un proceso de tu área.', type: 'reading', points: 10 }] },
+          { id: 'aprendizaje', title: 'Aprendizaje y autodesarrollo', icon: <LearningIcon/>, color: 'text-yellow-600', description: 'Cultivar la curiosidad y el compromiso con el crecimiento personal.', longDescription: 'Este eje promueve una mentalidad de crecimiento, donde cada colaborador es dueño de su desarrollo. Se incentiva la curiosidad, el compartir conocimiento y la búsqueda proactiva de nuevas habilidades y experiencias.', behaviors: ['Buscar activamente oportunidades de aprendizaje.', 'Compartir conocimientos y experiencias con el equipo.', 'Estar abierto a nuevas ideas y perspectivas.', 'Documentar y replicar lo aprendido para beneficio de otros.'], activities: [{ id: 'apr_club', title: 'Inicia un club de lectura', description: 'Organiza un club de lectura sobre un libro de desarrollo profesional. Definan una frecuencia y un formato para discutir los aprendizajes.', type: 'group', points: 20 }, { id: 'apr_blog', title: 'Escribe un artículo', description: 'Escribe un breve artículo o guía en la intranet sobre algo nuevo que aprendiste. Puede ser una herramienta, un proceso o una habilidad.', type: 'practice', points: 15 }, { id: 'apr_replicar', title: 'Replicar el aprendizaje', description: 'Después de asistir a un curso o webinar, organiza una breve sesión para compartir los 3 puntos más importantes con tu equipo.', type: 'practice', points: 15 }, { id: 'apr_recursos', title: 'Recomienda TED-Talks & Podcasts', description: 'Crea una lista de tus 3 TED-Talks o podcasts favoritos sobre temas de interés para tu equipo y compártela.', type: 'practice', points: 10 }] },
+          { id: 'empoderamiento', title: 'Empoderamiento', icon: <EmpowermentIcon/>, color: 'text-red-600', description: 'Otorgar autonomía, confianza y responsabilidad a los equipos.', longDescription: 'Empoderar significa dar a las personas la autoridad y los recursos para tomar decisiones y actuar. Este eje busca descentralizar la toma de decisiones, fomentar la proactividad y construir un alto nivel de confianza entre los miembros del equipo.', behaviors: ['Tomar decisiones dentro de su ámbito de responsabilidad.', 'Asumir la responsabilidad por los resultados.', 'Proponer mejoras y nuevas formas de trabajar.', 'Confiar en la capacidad y el criterio de los colegas.'], activities: [{ id: 'emp_confianza', title: 'Pilares de la confianza', description: 'Discute en equipo cómo ciertos comportamientos afectan la confianza, basándose en sus 4 pilares: Credibilidad, Honestidad, Intención y Responsabilidad.', type: 'group', points: 20 }, { id: 'emp_proposito', title: 'Elaborando mi propósito', description: 'Realiza el ejercicio de introspección guiado para identificar tus motivadores, valores y definir un propósito personal que te guíe.', type: 'practice', points: 15 }, { id: 'emp_grow', title: 'Aplica un GROW a un colega', description: 'Utiliza el modelo de coaching GROW (Goal, Reality, Options, Will) para ayudar a un colega a estructurar un problema y encontrar soluciones.', type: 'practice', points: 20 }, { id: 'emp_proyectos', title: 'Involúcrate en un proyecto', description: 'Levanta la mano para participar en un proyecto fuera de tus responsabilidades diarias y asume un nuevo rol o tarea.', type: 'practice', points: 15 }] },
+          { id: 'seguridad', title: 'Seguridad psicológica', icon: <SafetyIcon/>, color: 'text-teal-600', description: 'Crear un ambiente de confianza para expresarse y tomar riesgos.', longDescription: 'La seguridad psicológica es la creencia de que uno no será castigado o humillado por hablar con ideas, preguntas, preocupaciones o errores. Es el fundamento para la innovación, el aprendizaje y la colaboración efectiva. Este eje es vital para que todos los demás puedan florecer.', behaviors: ['Escuchar con la intención de entender, no solo de responder.', 'Hacer más preguntas para fomentar la participación de todos.', 'Agradecer el feedback recibido, especialmente si es difícil.', 'Opinar sin temor a represalias, incluso si es para retar el status quo.', 'Admitir errores y verlos como oportunidades de aprendizaje.'], activities: [{ id: 'seg_escucha', title: 'Práctica de escucha activa', description: 'En tu próxima conversación 1 a 1, concéntrate en escuchar sin interrumpir. Al final, parafrasea lo que entendiste para asegurar la comprensión antes de dar tu opinión.', type: 'practice', points: 20 }, { id: 'seg_preguntas', title: 'Fomenta la participación', description: 'En tu próxima reunión de equipo, haz preguntas abiertas como "¿Qué otras perspectivas hay sobre este tema?" o "¿Qué riesgos podríamos no estar viendo?".', type: 'practice', points: 15 }, { id: 'seg_agradecer', title: 'Agradece el feedback', description: 'La próxima vez que recibas feedback constructivo, responde simplemente "Gracias por compartir esto conmigo, lo voy a reflexionar". Evita la justificación inmediata.', type: 'practice', points: 15 }, { id: 'seg_autodiagnostico', title: 'Autodiagnóstico de seguridad psicológica', description: 'Utiliza los recursos de la organización para realizar un autodiagnóstico. Reflexiona sobre cómo puedes contribuir personalmente a mejorar la seguridad en tu equipo.', type: 'reading', points: 10 }] }
+        ];
+
+        const glossaryData = [
+          { term: 'Reconocimiento', definition: 'Este eje busca crear un ambiente donde el reconocimiento sea una práctica diaria y genuina. Se enfoca en valorar tanto los grandes logros como los esfuerzos cotidianos, conectando el aprecio con los valores fundamentales de la organización.', category: 'Eje cultural' },
+          { term: 'Liderazgo', definition: 'El liderazgo no es solo un rol, es una actitud. Este eje promueve la autogestión, la comunicación efectiva y la capacidad de guiar e inspirar a otros, sin importar la jerarquía. Se trata de tomar la iniciativa y ser un modelo a seguir.', category: 'Eje cultural' },
+          { term: 'Agilidad', definition: 'La agilidad es la capacidad de responder al cambio de manera rápida y efectiva. Este eje impulsa la mejora continua a través de ciclos cortos de trabajo, experimentación y aprendizaje constante a partir de la retroalimentación.', category: 'Eje cultural' },
+          { term: 'Aprendizaje y autodesarrollo', definition: 'Este eje promueve una mentalidad de crecimiento, donde cada colaborador es dueño de su desarrollo. Se incentiva la curiosidad, el compartir conocimiento y la búsqueda proactiva de nuevas habilidades y experiencias.', category: 'Eje cultural' },
+          { term: 'Empoderamiento', definition: 'Empoderar significa dar a las personas la autoridad y los recursos para tomar decisiones y actuar. Este eje busca descentralizar la toma de decisiones, fomentar la proactividad y construir un alto nivel de confianza entre los miembros del equipo.', category: 'Eje cultural' },
+          { term: 'Seguridad Psicológica', definition: 'La seguridad psicológica es la creencia de que uno no será castigado o humillado por hablar con ideas, preguntas, preocupaciones o errores. Es el fundamento para la innovación, el aprendizaje y la colaboración efectiva.', category: 'Eje cultural' },
+          { term: 'Pizarra de Kudos', definition: 'Un espacio interactivo (físico o digital) donde los colaboradores pueden dejar notas de agradecimiento y reconocimiento a sus compañeros, especificando el valor de la organización que observaron en la acción.', category: 'Actividad o práctica' },
+          { term: 'Mentoring express y reverso', definition: 'Sesiones informales y breves (ej. 30 minutos) para compartir experiencias. El "Mentoring Reverso", es una variante donde colaboradores más jóvenes comparten conocimientos sobre nuevas tecnologías o tendencias con los más experimentados.', category: 'Actividad o práctica' },
+          { term: 'Matriz de Eisenhower', definition: 'Una herramienta de gestión del tiempo que ayuda a priorizar tareas dividiéndolas en cuatro cuadrantes: Urgente/Importante, No Urgente/Importante, Urgente/No Importante, y No Urgente/No Importante.', category: 'Actividad o práctica' },
+          { term: 'Perfection Game', definition: 'Una técnica de feedback estructurado. Se califica un entregable de 1 a 10, se explica qué aspectos positivos justifican esa nota y, finalmente, se sugiere qué mejoras concretas se necesitarían para alcanzar un 10.', category: 'Actividad o práctica' },
+          { term: 'Cuadrante de la retrospectiva', definition: 'Un ejercicio de equipo para reflexionar sobre un proyecto o período. Se divide un espacio en cuatro cuadrantes: ¿Qué salió bien?, ¿Qué podríamos mejorar?, Nuevas ideas, y Reconocimientos.', category: 'Actividad o práctica' },
+          { term: 'Modelo GROW', definition: 'Un modelo de coaching simple y potente para la resolución de problemas y el establecimiento de metas. Sus siglas son: G (Goal/Meta), R (Reality/Realidad), O (Options/Opciones), W (Will/Voluntad).', category: 'Actividad o práctica' },
+          { term: 'Toyota Kata', definition: 'Un modelo de mejora continua que consiste en un ciclo de cuatro pasos: 1) Entender la dirección o desafío, 2) Comprender la condición actual, 3) Establecer la siguiente condición objetivo, 4) Experimentar hacia la condición objetivo.', category: 'Actividad o práctica' },
+          { term: 'Barrett Values Centre', definition: 'Una organización global especializada en la medición y transformación de la cultura organizacional. Sus diagnósticos, como el utilizado por la organización, ayudan a las empresas a comprender sus valores actuales y a definir una cultura deseada.', category: 'Concepto clave' },
+          { term: 'Entropía cultural', definition: 'En el contexto del Barrett Values Centre, se refiere al grado de disfunción en una organización causado por comportamientos negativos y limitantes (como burocracia, jerarquía, silos). Reducir la entropía es clave para mejorar el desempeño y el bienestar.', category: 'Concepto clave' },
+        ];
+
+        const GamificationContext = createContext(undefined);
+        const getWeekNumber = (date) => {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            const weekNo = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+            return [d.getUTCFullYear(), weekNo];
+        };
+        const GamificationProvider = ({ children }) => {
+          const [points, setPoints] = useState(() => JSON.parse(localStorage.getItem('gamification-points') || '0'));
+          const [completedActivities, setCompletedActivities] = useState(() => new Set(JSON.parse(localStorage.getItem('gamification-completed') || '[]')));
+          const [badges, setBadges] = useState(() => new Set(JSON.parse(localStorage.getItem('gamification-badges') || '[]')));
+          const [celebration, setCelebration] = useState(null);
+          const [pendingBadgeCelebration, setPendingBadgeCelebration] = useState(null);
+          const [streakData, setStreakData] = useState(() => {
+            const saved = localStorage.getItem('gamification-streak');
+            return saved ? JSON.parse(saved) : { count: 0, lastCompletion: 0 };
+          });
+          useEffect(() => { localStorage.setItem('gamification-points', JSON.stringify(points)); }, [points]);
+          useEffect(() => { localStorage.setItem('gamification-completed', JSON.stringify(Array.from(completedActivities))); }, [completedActivities]);
+          useEffect(() => { localStorage.setItem('gamification-badges', JSON.stringify(Array.from(badges))); }, [badges]);
+          useEffect(() => { localStorage.setItem('gamification-streak', JSON.stringify(streakData));}, [streakData]);
+          useEffect(() => {
+              const awardedBadges = new Set();
+              if (completedActivities.size > 0) {
+                  awardedBadges.add('first_activity');
+              }
+              const completedPillars = new Set();
+              pillarsData.forEach(pillar => {
+                  const pillarActivities = new Set(pillar.activities.map(a => a.id));
+                  if (pillar.activities.length > 0 && [...pillarActivities].every(id => completedActivities.has(id))) {
+                      const pillarBadgeId = `pillar_${pillar.id}`;
+                      awardedBadges.add(pillarBadgeId);
+                      completedPillars.add(pillar.id);
+                  }
+              });
+              if (completedPillars.size === pillarsData.length) {
+                  awardedBadges.add('all_pillars');
+              }
+              const newBadges = [...awardedBadges].filter(id => !badges.has(id));
+              if (newBadges.length > 0) {
+                  const badgeOrder = Object.keys(BADGES);
+                  newBadges.sort((a, b) => badgeOrder.indexOf(a) - badgeOrder.indexOf(b));
+                  const badgeToCelebrateId = newBadges[newBadges.length - 1]; // Celebrate the "highest" new badge
+                  const badgeInfo = BADGES[badgeToCelebrateId];
+                  if (badgeInfo) {
+                      setPendingBadgeCelebration(badgeInfo);
+                  }
+              }
+              setBadges(prevBadges => {
+                  if (prevBadges.size === awardedBadges.size && [...prevBadges].every(id => awardedBadges.has(id))) {
+                      return prevBadges;
+                  }
+                  return awardedBadges;
+              });
+          }, [completedActivities, badges]);
+          const addPoints = useCallback((amount) => {
+            setPoints(prev => Number(prev) + Number(amount));
+          }, []);
+          const completeActivity = useCallback((activityId, activityPoints, activityTitle) => {
+              if (completedActivities.has(activityId)) return;
+              addPoints(activityPoints);
+              setCompletedActivities(prev => new Set(prev).add(activityId));
+              setCelebration({ type: 'activity', data: { title: activityTitle, points: activityPoints } });
+              setStreakData(prevStreak => {
+                  const now = Date.now();
+                  if (prevStreak.lastCompletion === 0) {
+                      return { count: 1, lastCompletion: now };
+                  }
+                  const [currentYear, currentWeek] = getWeekNumber(new Date());
+                  const [lastYear, lastWeek] = getWeekNumber(new Date(prevStreak.lastCompletion));
+                  if (currentYear === lastYear && currentWeek === lastWeek) {
+                      return prevStreak;
+                  }
+                  const isConsecutiveWeek = (currentYear === lastYear && currentWeek === lastWeek + 1) || (currentYear === lastYear + 1 && currentWeek === 1 && (lastWeek === 52 || lastWeek === 53));
+                  if (isConsecutiveWeek) {
+                    return { count: prevStreak.count + 1, lastCompletion: now };
+                  }
+                  return { count: 1, lastCompletion: now };
+              });
+          }, [completedActivities, addPoints]);
+          const clearCelebration = useCallback(() => {
+            if (pendingBadgeCelebration) {
+                setCelebration({ type: 'badge', data: pendingBadgeCelebration });
+                setPendingBadgeCelebration(null);
+            } else {
+                setCelebration(null);
+            }
+          }, [pendingBadgeCelebration]);
+          const getBadges = useCallback(() => {
+            const badgeOrder = Object.keys(BADGES);
+            return Array.from(badges)
+                .map((id) => BADGES[id])
+                .filter(Boolean)
+                .sort((a, b) => badgeOrder.indexOf(a.id) - badgeOrder.indexOf(b.id));
+          }, [badges]);
+          const value = useMemo(() => ({
+            points,
+            completedActivities,
+            badges,
+            streak: streakData.count,
+            addPoints,
+            completeActivity,
+            getBadges,
+            celebration,
+            clearCelebration,
+            setCelebration,
+          }), [points, completedActivities, badges, streakData.count, addPoints, completeActivity, getBadges, celebration, clearCelebration, setCelebration]);
+          return (
+            <GamificationContext.Provider value={value}>
+              {children}
+            </GamificationContext.Provider>
+          );
+        };
+        const useGamification = () => {
+          const context = useContext(GamificationContext);
+          if (context === undefined) {
+            throw new Error('useGamification must be used within a GamificationProvider');
+          }
+          return context;
+        };
+        
+        const PillarCard = ({ pillar, onClick }) => {
+          return (
+            <div onClick={onClick} className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden group">
+              <div className={`p-6 flex items-center space-x-5 border-l-8 ${pillar.color.replace('text', 'border')}`}>
+                <div className={`flex-shrink-0 p-3 bg-slate-100 rounded-full ${pillar.color} group-hover:scale-110 transition-transform duration-300`}>
+                  {pillar.icon}
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-800">{pillar.title}</h3>
+                  <p className="text-slate-500 mt-1">{pillar.description}</p>
+                </div>
+              </div>
+              <div className={`bg-slate-50 px-6 py-3 text-right`}>
+                <span className="text-sm font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">
+                  Explorar eje &rarr;
+                </span>
+              </div>
+            </div>
+          );
+        };
+        
+        const ActivityCard = ({ activity, pillarId, pillarColor }) => {
+          const { completeActivity, completedActivities } = useGamification();
+          const isCompleted = completedActivities.has(activity.id);
+          const typeStyles = {
+            interactive: { icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" /></svg>, text: 'Interactivo' },
+            practice: { icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3.5 2a.5.5 0 00-.5.5v15a.5.5 0 00.5.5h13a.5.5 0 00.5-.5V5.414a.5.5 0 00-.146-.354l-3-3A.5.5 0 0013.586 2H3.5zm4 5.5a.5.5 0 01.5-.5h4a.5.5 0 010 1h-4a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h4a.5.5 0 010 1h-4a.5.5 0 01-.5-.5z" clipRule="evenodd" /></svg>, text: 'Práctica' },
+            group: { icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" /></svg>, text: 'Grupal' },
+            reading: { icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" /></svg>, text: 'Lectura' },
+          };
+          const { icon, text } = typeStyles[activity.type];
+          return (
+            <div className={'bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 ' + (isCompleted ? 'ring-2 ring-green-500' : 'hover:shadow-xl')}>
+              <div className="p-6">
+                <div className="flex justify-between items-start">
+                  <h4 className="text-xl font-bold text-slate-900 pr-4">{activity.title}</h4>
+                  <div className="flex-shrink-0 flex items-center bg-yellow-100 text-yellow-800 text-xs font-bold px-2.5 py-1 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                    {activity.points} Puntos
+                  </div>
+                </div>
+                <div className="mt-2 flex items-center space-x-1 text-sm text-gray-500">
+                  {icon}
+                  <span>{text}</span>
+                </div>
+                <p className="mt-4 text-slate-600">{activity.description}</p>
+                {activity.interactiveElement && (
+                    <div className="mt-4 p-4 bg-slate-50 rounded-md border border-slate-200">
+                        {activity.interactiveElement}
+                    </div>
+                )}
+              </div>
+              {!activity.hideCompletionButton ? (
+                  <div className="bg-slate-50 px-6 py-4">
+                    <button onClick={() => completeActivity(activity.id, activity.points, activity.title)} disabled={isCompleted} className={'w-full font-bold py-2 px-4 rounded-md transition-all duration-300 flex items-center justify-center space-x-2 ' + (isCompleted ? 'bg-green-500 text-white cursor-not-allowed' : 'bg-white text-slate-700 ring-2 ring-slate-300 hover:ring-slate-400 hover:bg-slate-100')}>
+                      {isCompleted ? ( <> <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> <span>Completado</span> </> ) : ( <span>Marcar como completado</span> )}
+                    </button>
+                  </div>
+              ) : (
+                 isCompleted ? (
+                    <div className="bg-green-50 px-6 py-4 flex items-center justify-center space-x-2 text-green-700 font-semibold">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                        <span>Actividad completada - ¡Sigue participando!</span>
+                    </div>
+                 ) : (
+                    <div className="bg-slate-50 px-6 py-4 text-center text-slate-500 text-sm italic">
+                        Interactúa arriba para completar
+                    </div>
+                 )
+              )}
+            </div>
+          );
+        };
+        
+        const NavLink = ({ onClick, isActive, children, isMobile = false }) => (
+            <button onClick={onClick} className={'transition-colors duration-200 ' + (isMobile ? 'block w-full text-left px-3 py-3 rounded-md text-base font-medium' : 'px-3 py-2 rounded-md text-sm font-medium') + ' ' + (isActive ? 'bg-slate-900 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white')}>
+                {children}
+            </button>
+        );
+        const Header = ({ onNavigate, currentView }) => {
+            const { points, streak } = useGamification();
+            const { userName, logout } = useAuth();
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const handleNav = (view) => {
+                onNavigate(view);
+                setIsMenuOpen(false);
+            };
+            return (
+                <header className="bg-slate-800 shadow-md sticky top-0 z-50">
+                    <nav className="container mx-auto px-4">
+                        <div className="flex items-center justify-between h-16">
+                            <div className="flex items-center">
+                                <div className="flex-shrink-0 text-white font-bold text-lg cursor-pointer" onClick={() => handleNav('home')}>Cultura Org</div>
+                                <div className="hidden md:block">
+                                    <div className="ml-10 flex items-baseline space-x-4">
+                                       <NavLink onClick={() => handleNav('home')} isActive={currentView === 'home'}>Inicio</NavLink>
+                                       <NavLink onClick={() => handleNav('dashboard')} isActive={currentView === 'dashboard'}>Mi Ruta Cultural</NavLink>
+                                       <NavLink onClick={() => handleNav('glossary')} isActive={currentView === 'glossary'}>Glosario</NavLink>
+                                       <NavLink onClick={() => handleNav('resources')} isActive={currentView === 'resources'}>Recursos</NavLink>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center space-x-2 sm:space-x-4">
+                                 <div className="hidden md:flex items-center text-slate-300">
+                                     <span>Hola, {userName}</span>
+                                     <button onClick={logout} title="Cerrar sesión" className="ml-3 text-slate-400 hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" /></svg>
+                                     </button>
+                                 </div>
+                                 <div className="flex items-center space-x-3">
+                                    {streak > 0 && (
+                                        <div className="text-orange-400 font-bold flex items-center" title={`Racha de ${streak} semana(s) completando actividades.`}>
+                                            <span className="text-lg">🔥</span>
+                                            <span>{streak}</span>
+                                        </div>
+                                    )}
+                                     <div id="onboarding-points" className="text-yellow-400 font-bold flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                        <span>{points} Puntos</span>
+                                    </div>
+                                </div>
+                                <div className="md:hidden flex items-center">
+                                     <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="inline-flex items-center justify-center p-2 rounded-md text-slate-300 hover:text-white hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded={isMenuOpen}>
+                                        <span className="sr-only">Abrir menú principal</span>
+                                        {isMenuOpen ? ( <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg> ) : ( <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg> )}
+                                     </button>
+                                </div>
+                            </div>
+                        </div>
+                         {isMenuOpen && (
+                            <div className="md:hidden" id="mobile-menu">
+                                <div className="px-2 pt-2 pb-3 space-y-2 sm:px-3">
+                                    <NavLink onClick={() => handleNav('home')} isActive={currentView === 'home'} isMobile={true}>Inicio</NavLink>
+                                    <NavLink onClick={() => handleNav('dashboard')} isActive={currentView === 'dashboard'} isMobile={true}>Mi Ruta Cultural</NavLink>
+                                    <NavLink onClick={() => handleNav('glossary')} isActive={currentView === 'glossary'} isMobile={true}>Glosario</NavLink>
+                                    <NavLink onClick={() => handleNav('resources')} isActive={currentView === 'resources'} isMobile={true}>Recursos</NavLink>
+                                </div>
+                                <div className="pt-4 pb-3 border-t border-slate-700">
+                                     <div className="flex items-center justify-between px-3">
+                                        <span className="text-white font-medium">Hola, {userName}</span>
+                                        <button onClick={logout} title="Cerrar Sesión" className="flex-shrink-0 bg-slate-700 p-2 rounded-full text-slate-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-white">
+                                            <span className="sr-only">Cerrar Sesión</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" /></svg>
+                                        </button>
+                                     </div>
+                                </div>
+                            </div>
+                         )}
+                    </nav>
+                </header>
+            );
+        };
+        
+        const GoalModal = ({ goal, onSave, onClose }) => {
+            const [title, setTitle] = useState(goal?.title || '');
+            const [date, setDate] = useState(goal?.date || '');
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!title.trim()) return;
+                onSave({ id: goal?.id, title, date });
+            };
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+                    <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+                        <form onSubmit={handleSubmit}>
+                            <div className="p-6">
+                                <h3 className="text-lg font-bold text-slate-800">{goal?.id ? 'Editar objetivo' : 'Nuevo objetivo personal'}</h3>
+                                <div className="mt-4 space-y-4">
+                                    <div>
+                                        <label htmlFor="goal-title" className="block text-sm font-medium text-slate-700">Objetivo</label>
+                                        <input id="goal-title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ej: Mejorar mi liderazgo" className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" required autoFocus />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="goal-date" className="block text-sm font-medium text-slate-700">Fecha límite (opcional)</label>
+                                        <input id="goal-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-slate-50 px-6 py-3 flex justify-end space-x-3">
+                                <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Cancelar</button>
+                                <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+        const GoalItem = ({ goal, onToggle, onEdit, onDelete }) => {
+            return (
+                <div className={`p-4 rounded-lg flex items-center gap-4 transition-all duration-300 ${goal.completed ? 'bg-slate-100 opacity-70' : 'bg-blue-50/70'}`}>
+                    <input type="checkbox" checked={goal.completed} onChange={() => onToggle(goal.id)} aria-labelledby={`goal-title-${goal.id}`} className="h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer flex-shrink-0" />
+                    <div className="flex-grow">
+                        <p id={`goal-title-${goal.id}`} className={`font-medium text-slate-800 ${goal.completed ? 'line-through text-slate-500' : ''}`}>{goal.title}</p>
+                        {goal.date && (<p className={`text-sm ${goal.completed ? 'text-slate-400' : 'text-slate-500'}`}>Fecha límite: {new Date(goal.date + 'T00:00:00').toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</p>)}
+                    </div>
+                    <div className="flex-shrink-0 flex items-center space-x-2">
+                         <button onClick={() => onEdit(goal)} className="p-2 text-slate-500 hover:text-blue-600 hover:bg-slate-200 rounded-full transition-colors" aria-label={`Editar objetivo: ${goal.title}`}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" /></svg>
+                         </button>
+                         <button onClick={() => onDelete(goal.id)} className="p-2 text-slate-500 hover:text-red-600 hover:bg-slate-200 rounded-full transition-colors" aria-label={`Eliminar objetivo: ${goal.title}`}>
+                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" /></svg>
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+        const PersonalGoals = () => {
+            const [goals, setGoals] = useState([]);
+            const [isModalOpen, setIsModalOpen] = useState(false);
+            const [editingGoal, setEditingGoal] = useState(null);
+            useEffect(() => {
+                try {
+                    const savedGoals = localStorage.getItem('bccr-culture-goals');
+                    if (savedGoals) setGoals(JSON.parse(savedGoals));
+                } catch (error) { console.error("Failed to load goals from localStorage", error); }
+            }, []);
+            useEffect(() => {
+                try {
+                    localStorage.setItem('bccr-culture-goals', JSON.stringify(goals));
+                } catch (error) { console.error("Failed to save goals to localStorage", error); }
+            }, [goals]);
+            const handleSaveGoal = (goalData) => {
+                if (goalData.id) {
+                    setGoals(goals.map(g => g.id === goalData.id ? { ...g, title: goalData.title, date: goalData.date } : g));
+                } else {
+                    const newGoal = { id: new Date().toISOString(), title: goalData.title, date: goalData.date, completed: false };
+                    setGoals([newGoal, ...goals]);
+                }
+                setIsModalOpen(false);
+                setEditingGoal(null);
+            };
+            const handleToggleComplete = (id) => {
+                setGoals(goals.map(g => (g.id === id ? { ...g, completed: !g.completed } : g)));
+            };
+            const handleDeleteGoal = (id) => {
+                if(window.confirm('¿Estás seguro de que quieres eliminar este objetivo?')) {
+                    setGoals(goals.filter(g => g.id !== id));
+                }
+            };
+            const openAddModal = () => { setEditingGoal(null); setIsModalOpen(true); };
+            const openEditModal = (goal) => { setEditingGoal(goal); setIsModalOpen(true); };
+            const { completedGoals, activeGoals } = useMemo(() => {
+                const completed = goals.filter(g => g.completed).sort((a,b) => (a.date || 'z').localeCompare(b.date || 'z'));
+                const active = goals.filter(g => !g.completed).sort((a,b) => (a.date || 'z').localeCompare(b.date || 'z'));
+                return { completedGoals: completed, activeGoals: active };
+            }, [goals]);
+            return (
+                <section id="onboarding-goals" className="bg-white p-6 md:p-8 rounded-xl shadow-md">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <h2 className="text-3xl font-bold text-slate-800">Mis objetivos de cultura</h2>
+                        <button onClick={openAddModal} className="inline-flex items-center justify-center space-x-2 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" /></svg>
+                            <span>Agregar objetivo</span>
+                        </button>
+                    </div>
+                    <div className="mt-6">
+                        {goals.length === 0 ? (
+                            <div className="text-center py-8 px-4 bg-slate-50 rounded-lg">
+                                <p className="text-slate-600">Aún no has agregado ningún objetivo personal.</p>
+                                <p className="text-sm text-slate-500 mt-1">¡Define tu primer objetivo para empezar a transformar tu cultura!</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {activeGoals.map(goal => (<GoalItem key={goal.id} goal={goal} onToggle={handleToggleComplete} onEdit={openEditModal} onDelete={handleDeleteGoal} />))}
+                                {completedGoals.length > 0 && activeGoals.length > 0 && <hr className="my-6 border-slate-200" />}
+                                {completedGoals.map(goal => (<GoalItem key={goal.id} goal={goal} onToggle={handleToggleComplete} onEdit={openEditModal} onDelete={handleDeleteGoal} />))}
+                            </div>
+                        )}
+                    </div>
+                    {isModalOpen && <GoalModal goal={editingGoal} onSave={handleSaveGoal} onClose={() => setIsModalOpen(false)} />}
+                </section>
+            );
+        };
+        
+        const Login = () => {
+            const [name, setName] = useState('');
+            const [division, setDivision] = useState('');
+            const [email, setEmail] = useState('');
+            const { login } = useAuth();
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (name.trim() && division.trim() && email.trim()) {
+                    login(name, division, email);
+                }
+            };
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+                    <div className="w-full max-w-md text-center bg-white p-8 md:p-12 rounded-2xl shadow-xl">
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800">¡Bienvenido/a a la <span className="text-blue-600">Ruta Cultural</span>!</h1>
+                        <p className="mt-4 text-slate-600">Introduce tus datos para personalizar tu experiencia y guardar tu progreso.</p>
+                        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+                            <div>
+                                <label htmlFor="name-input" className="sr-only">Tu nombre</label>
+                                <input id="name-input" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Escribe tu nombre aquí" required className="w-full p-3 text-lg border-2 border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" autoFocus />
+                            </div>
+                            <div>
+                                <label htmlFor="email-input" className="sr-only">Tu correo electrónico</label>
+                                <input id="email-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Tu correo electrónico" required className="w-full p-3 text-lg border-2 border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" />
+                            </div>
+                            <div>
+                                <label htmlFor="division-input" className="sr-only">Tu División o Departamento</label>
+                                <select id="division-input" value={division} onChange={(e) => setDivision(e.target.value)} required className="w-full p-3 text-lg border-2 border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                    <option value="" disabled>Selecciona tu División</option>
+                                    <option value="DST-TSP">DST-TSP</option>
+                                    <option value="DST-CIB">DST-CIB</option>
+                                    <option value="DST-TEF">DST-TEF</option>
+                                    <option value="DST-CID">DST-CID</option>
+                                    <option value="DST-ITE">DST-ITE</option>
+                                    <option value="DST-AAT">DST-AAT</option>
+                                    <option value="DST-TIS">DST-TIS</option>
+                                    <option value="DST-TCO">DST-TCO</option>
+                                </select>
+                            </div>
+                            <button type="submit" disabled={!name.trim() || !division.trim() || !email.trim()} className="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed">Comenzar mi ruta</button>
+                        </form>
+                         <p className="mt-6 text-xs text-slate-400">Tus datos y progreso se guardarán únicamente en este navegador.</p>
+                    </div>
+                </div>
+            );
+        };
+        const Home = ({ onNavigate }) => {
+            return (
+                <div className="space-y-12">
+                    <section className="text-center bg-white p-8 md:p-12 rounded-xl shadow-md">
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800">Nuestra Ruta de <span className="text-blue-600">Transformación Cultural</span></h1>
+                        <p className="mt-4 max-w-3xl mx-auto text-lg text-slate-600">Basado en el diagnóstico del <strong className="font-semibold">Barrett Values Centre</strong>, iniciamos un viaje para reducir la entropía (jerarquía, burocracia, silos) y construir juntos la cultura que deseamos en la organización.</p>
+                        <p className="mt-6 text-md font-semibold text-purple-700">¡Explora los ejes, participa en las actividades y sé protagonista del cambio!</p>
+                    </section>
+                    <PersonalGoals />
+                    <section>
+                        <h2 className="text-3xl font-bold text-center text-slate-800 mb-8">Los seis ejes culturales</h2>
+                        <div id="onboarding-pillars" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {pillarsData.map((pillar) => (<PillarCard key={pillar.id} pillar={pillar} onClick={() => onNavigate(pillar.id)} />))}
+                        </div>
+                    </section>
+                </div>
+            );
+        };
+        const PillarPage = ({ pillar }) => {
+          return (
+            <div className="space-y-12">
+              <header className={"bg-white p-8 rounded-xl shadow-md border-t-8 " + pillar.color.replace('text', 'border')}>
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  <div className={"flex-shrink-0 p-4 rounded-full bg-slate-100 " + pillar.color}>
+                    {cloneElement(pillar.icon, { className: "h-12 w-12" })}
+                  </div>
+                  <div>
+                    <h1 className={"text-4xl font-extrabold " + pillar.color}>{pillar.title}</h1>
+                    <p className="mt-2 text-lg text-slate-600">{pillar.longDescription}</p>
+                  </div>
+                </div>
+              </header>
+              <section>
+                <h2 className="text-2xl font-bold text-slate-800 mb-4">Comportamientos clave</h2>
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {pillar.behaviors.map((behavior, index) => (
+                    <li key={index} className="bg-white p-4 rounded-lg shadow-sm flex items-start space-x-3">
+                      <svg className={"flex-shrink-0 h-6 w-6 " + pillar.color} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      <span className="text-slate-700">{behavior}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+              <section>
+                <h2 className="text-3xl font-bold text-slate-800 mb-8">Actividades y prácticas sugeridas</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {pillar.activities.map((activity) => (<ActivityCard key={activity.id} activity={activity} pillarId={pillar.id} pillarColor={pillar.color} />))}
+                </div>
+              </section>
+            </div>
+          );
+        };
+        const Dashboard = ({ onNavigate }) => {
+            const { points, completedActivities, getBadges } = useGamification();
+            const { userName, division, email, logout } = useAuth();
+            const earnedBadges = getBadges();
+            const earnedBadgeIds = new Set(earnedBadges.map(b => b.id));
+            const [directoryName, setDirectoryName] = useState(null);
+            const [isSaving, setIsSaving] = useState(false);
+            useEffect(() => {
+                const checkDir = async () => {
+                    if (!('showDirectoryPicker' in window)) return;
+                    try {
+                        const handle = await getDirectoryHandle();
+                        if (handle) setDirectoryName(handle.name);
+                    } catch (error) { console.error("Could not retrieve directory handle:", error); }
+                };
+                checkDir();
+            }, []);
+            const handleSelectDirectory = async () => {
+                try {
+                    const handle = await window.showDirectoryPicker();
+                    await setDirectoryHandle(handle);
+                    setDirectoryName(handle.name);
+                    alert(`Carpeta "${handle.name}" configurada para respaldos.`);
+                } catch (error) {
+                    if ((error).name !== 'AbortError') {
+                        console.error("Error selecting directory:", error);
+                        alert("No se pudo configurar la carpeta. Asegúrate de otorgar los permisos necesarios.");
+                    }
+                }
+            };
+            const handleForgetDirectory = async () => {
+                if (window.confirm('¿Estás seguro de que quieres olvidar esta carpeta? La aplicación ya no podrá guardar ni cargar respaldos automáticamente.')) {
+                    await deleteDirectoryHandle();
+                    setDirectoryName(null);
+                    alert("Carpeta de respaldo olvidada.");
+                }
+            };
+            const handleSaveBackup = async () => {
+                 const dirHandle = await getDirectoryHandle();
+                if (dirHandle) {
+                    await handleAutoBackup(dirHandle);
+                } else {
+                    handleManualBackup();
+                }
+            };
+            const handleAutoBackup = async (dirHandle) => {
+                setIsSaving(true);
+                try {
+                    if (!dirHandle) {
+                        alert("Directorio no encontrado. Por favor, configura una carpeta primero.");
+                        setIsSaving(false); return;
+                    }
+                    if ((await dirHandle.queryPermission({ mode: 'readwrite' })) !== 'granted') {
+                         if ((await dirHandle.requestPermission({ mode: 'readwrite' })) !== 'granted') {
+                            alert("Permiso denegado para escribir en la carpeta.");
+                            setIsSaving(false); return;
+                         }
+                    }
+                    const dataToExport = { userName: localStorage.getItem('bccr-user-name'), division: localStorage.getItem('bccr-user-division'), email: localStorage.getItem('bccr-user-email'), points: JSON.parse(localStorage.getItem('gamification-points') || '0'), completedActivities: JSON.parse(localStorage.getItem('gamification-completed') || '[]'), badges: JSON.parse(localStorage.getItem('gamification-badges') || '[]'), goals: JSON.parse(localStorage.getItem('bccr-culture-goals') || '[]'), kudos: JSON.parse(localStorage.getItem('kudos-board') || '[]'), };
+                    const backupObject = { appId: 'cultura-org-2024', version: '1.2', timestamp: new Date().toISOString(), data: dataToExport, };
+                    const jsonString = JSON.stringify(backupObject);
+                    const encodedString = btoa(unescape(encodeURIComponent(jsonString)));
+                    const fileHandle = await dirHandle.getFileHandle(BACKUP_FILENAME, { create: true });
+                    const writable = await fileHandle.createWritable();
+                    await writable.write(encodedString);
+                    await writable.close();
+                    alert(`Progreso guardado con éxito en la carpeta "${dirHandle.name}".`);
+                } catch (error) {
+                    console.error("Error saving backup:", error);
+                    alert("Hubo un error al guardar el respaldo: " + (error).message);
+                } finally { setIsSaving(false); }
+            };
+            const handleEmailBackup = () => {
+                try {
+                    const userName = localStorage.getItem('bccr-user-name');
+                    const division = localStorage.getItem('bccr-user-division');
+                    const userEmail = localStorage.getItem('bccr-user-email');
+                    const dataToExport = {
+                        userName,
+                        division,
+                        email: userEmail,
+                        points: JSON.parse(localStorage.getItem('gamification-points') || '0'),
+                        completedActivities: JSON.parse(localStorage.getItem('gamification-completed') || '[]'),
+                        badges: JSON.parse(localStorage.getItem('gamification-badges') || '[]'),
+                        goals: JSON.parse(localStorage.getItem('bccr-culture-goals') || '[]'),
+                        kudos: JSON.parse(localStorage.getItem('kudos-board') || '[]'),
+                    };
+                    const backupObject = { appId: 'cultura-org-2024', version: '1.2', timestamp: new Date().toISOString(), data: dataToExport };
+                    const jsonString = JSON.stringify(backupObject);
+                    const encodedString = btoa(unescape(encodeURIComponent(jsonString)));
+
+                    const recipient = 'alvarezcl@bccr.fi.cr';
+                    const subject = `Respaldo Ruta Cultural - ${userName}`;
+                    const body = `[Usuario]${userName}[/Usuario]\n[Correo]${userEmail}[/Correo]\n[División]${division}[/División]\n[Respaldo]\n${encodedString}\n[/Respaldo]`;
+
+                    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                    window.location.href = mailtoLink;
+                } catch (error) {
+                    console.error("Error al generar el respaldo por correo:", error);
+                    alert("Hubo un error al generar tu respaldo por correo.");
+                }
+            };
+            const handleManualBackup = () => {
+                setIsSaving(true);
+                try {
+                    const dataToExport = { userName: localStorage.getItem('bccr-user-name'), division: localStorage.getItem('bccr-user-division'), email: localStorage.getItem('bccr-user-email'), points: JSON.parse(localStorage.getItem('gamification-points') || '0'), completedActivities: JSON.parse(localStorage.getItem('gamification-completed') || '[]'), badges: JSON.parse(localStorage.getItem('gamification-badges') || '[]'), goals: JSON.parse(localStorage.getItem('bccr-culture-goals') || '[]'), kudos: JSON.parse(localStorage.getItem('kudos-board') || '[]'), };
+                    const backupObject = { appId: 'cultura-org-2024', version: '1.2', timestamp: new Date().toISOString(), data: dataToExport, };
+                    const jsonString = JSON.stringify(backupObject);
+                    const encodedString = btoa(unescape(encodeURIComponent(jsonString)));
+                    const blob = new Blob([encodedString], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    const timestamp = new Date().toISOString().split('T')[0];
+                    link.href = url;
+                    link.download = `Cultura_Respaldo_${userName}_${timestamp}.txt`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                } catch (error) {
+                    console.error("Error al generar el archivo de respaldo:", error);
+                    alert("Hubo un error al generar tu archivo de respaldo.");
+                } finally {
+                    setIsSaving(false);
+                }
+            };
+            const handleRestoreFromFile = (event) => {
+                const file = event.target.files?.[0];
+                if (!file) return;
+                if (!window.confirm('¿Estás seguro? Al restaurar desde un archivo se sobreescribirá todo el progreso y el usuario actual en este navegador.')) {
+                    event.target.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const fileContent = e.target?.result;
+                        if (typeof fileContent !== 'string' || fileContent.trim() === '') throw new Error("No se pudo leer el contenido del archivo o está vacío.");
+                        const decodedString = decodeURIComponent(escape(atob(fileContent.trim())));
+                        const importedObject = JSON.parse(decodedString);
+                        if (importedObject.appId !== 'bccr-cultura-2024' && importedObject.appId !== 'cultura-org-2024' || !importedObject.data) throw new Error("El archivo de respaldo no es válido.");
+                        const { userName, division, email, points, completedActivities, badges, goals, kudos } = importedObject.data;
+                        if (typeof userName !== 'string' || typeof points !== 'number' || !Array.isArray(completedActivities) || !Array.isArray(badges)) throw new Error("El formato de los datos en el archivo de respaldo es incorrecto.");
+                        localStorage.setItem('bccr-user-name', userName);
+                        localStorage.setItem('bccr-user-division', division || '');
+                        localStorage.setItem('bccr-user-email', email || '');
+                        localStorage.setItem('gamification-points', JSON.stringify(points));
+                        localStorage.setItem('gamification-completed', JSON.stringify(completedActivities));
+                        localStorage.setItem('gamification-badges', JSON.stringify(badges));
+                        localStorage.setItem('bccr-culture-goals', JSON.stringify(goals || []));
+                        localStorage.setItem('kudos-board', JSON.stringify(kudos || []));
+                        localStorage.setItem('bccr-onboarding-completed', 'true');
+                        alert("Progreso restaurado con éxito. La página se recargará para aplicar los cambios.");
+                        window.location.reload();
+                    } catch (error) {
+                        console.error("Error al restaurar el progreso:", error);
+                        const errorMessage = error instanceof Error ? error.message : "Un error desconocido ocurrió.";
+                        alert('No se pudo restaurar el progreso. Asegúrate de que el archivo sea correcto y no haya sido alterado. Error: ' + errorMessage);
+                    } finally { event.target.value = ''; }
+                };
+                reader.onerror = () => { alert('Hubo un error al leer el archivo.'); event.target.value = ''; };
+                reader.readAsText(file);
+            };
+            const journeyMapData = useMemo(() => pillarsData.map(pillar => {
+                const completedCount = pillar.activities.filter(a => completedActivities.has(a.id)).length;
+                return { label: pillar.title, value: completedCount, total: pillar.activities.length, colorClass: pillar.color.replace('text', 'bg'), icon: pillar.icon };
+            }), [completedActivities]);
+            const suggestedActivity = useMemo(() => {
+                const pillarsWithProgress = pillarsData.map(pillar => {
+                    const completedCount = pillar.activities.filter(act => completedActivities.has(act.id)).length;
+                    const progress = pillar.activities.length > 0 ? completedCount / pillar.activities.length : 1;
+                    return { ...pillar, progress };
+                }).sort((a, b) => a.progress - b.progress);
+                for (const pillar of pillarsWithProgress) {
+                    const nextActivity = pillar.activities.find(act => !completedActivities.has(act.id));
+                    if (nextActivity) return { activity: nextActivity, pillar };
+                }
+                return null;
+            }, [completedActivities]);
+            const JourneyMap = ({ progressData }) => {
+                const overallProgress = useMemo(() => {
+                    const totalValue = progressData.reduce((sum, item) => sum + item.value, 0);
+                    const totalActivities = progressData.reduce((sum, item) => sum + item.total, 0);
+                    return totalActivities > 0 ? (totalValue / totalActivities) * 100 : 0;
+                }, [progressData]);
+                return (
+                    <div className="bg-white p-6 rounded-xl shadow-lg">
+                        <h2 className="text-3xl font-bold text-slate-800 mb-2">Mi viaje cultural</h2>
+                        <p className="text-slate-600 mb-8">Tu progreso a través de los seis ejes culturales. ¡Sigue avanzando!</p>
+                        <div className="relative">
+                            <div className="absolute left-4 top-4 bottom-4 w-1 bg-slate-200 rounded-full"><div className="absolute left-0 top-0 w-full bg-gradient-to-b from-blue-500 to-teal-400 rounded-full" style={{height: `${overallProgress}%`, transition: 'height 1s ease-out'}}></div></div>
+                            <div className="space-y-8 relative">
+                                {progressData.map((pillar) => {
+                                    const progress = pillar.total > 0 ? (pillar.value / pillar.total) * 100 : 0;
+                                    const isCompleted = progress === 100;
+                                    const isInProgress = progress > 0;
+                                    return (
+                                        <div key={pillar.label} className="relative flex items-center">
+                                            <div className={`absolute left-4 -translate-x-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center ring-4 ring-white transition-all duration-300 ${isCompleted ? 'bg-green-500' : isInProgress ? pillar.colorClass.replace('text', 'bg') : 'bg-slate-300'}`}>
+                                                {isCompleted ? <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg> : cloneElement(pillar.icon, { className: `w-5 h-5 ${isInProgress ? 'text-white' : 'text-slate-500'}` })}
+                                            </div>
+                                            <div className="ml-12 bg-slate-50 border border-slate-200 rounded-lg shadow-sm w-full transition-shadow hover:shadow-md">
+                                                 <div className="p-4"><div className="flex justify-between items-center"><h4 className="font-bold text-slate-800">{pillar.label}</h4><span className={`font-bold text-sm ${isCompleted ? 'text-green-600' : 'text-slate-600'}`}>{Math.round(progress)}%</span></div></div>
+                                                <div className="bg-slate-200 h-2 rounded-b-lg overflow-hidden"><div className={`h-full transition-all duration-500 ${isCompleted ? 'bg-green-500' : pillar.colorClass}`} style={{ width: `${progress}%` }}></div></div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+            const SuggestedActivity = ({ activity, pillar, onNavigate }) => {
+                return (
+                    <section className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h2 className="text-2xl font-bold text-slate-800">Sugerencia para ti</h2>
+                        <p className="text-slate-600 mt-1">Para seguir avanzando en tu ruta, te sugerimos esta actividad:</p>
+                        <div className="mt-4 bg-white p-4 rounded-lg shadow-inner">
+                            <p className="text-sm font-semibold text-purple-700 uppercase tracking-wider">{pillar.title}</p>
+                            <h3 className="text-xl font-bold text-slate-900 mt-1">{activity.title}</h3>
+                            <p className="text-slate-500 mt-2">{activity.description}</p>
+                             <div className="mt-3 flex justify-between items-center">
+                                <div className="flex items-center bg-yellow-100 text-yellow-800 text-xs font-bold px-2.5 py-1 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>{activity.points} Puntos</div>
+                                <button onClick={() => onNavigate(pillar.id)} className="bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">¡Vamos! &rarr;</button>
+                             </div>
+                        </div>
+                    </section>
+                );
+            };
+            const Badge = ({ badge, isEarned }) => (
+                <div className={'p-4 rounded-lg flex items-center space-x-4 transition-all duration-300 ' + (isEarned ? badge.colorClasses + ' shadow-lg' : 'bg-slate-100')}>
+                    <div className={'flex-shrink-0 ' + (isEarned ? badge.iconColorClasses : 'text-slate-400')}>{cloneElement(badge.icon, { className: "h-12 w-12" })}</div>
+                    <div className="flex-grow"><h4 className={'font-bold ' + (isEarned ? '' : 'text-slate-500')}>{badge.name}</h4><p className={'text-sm ' + (isEarned ? 'opacity-90' : 'text-slate-400')}>{badge.description}</p></div>
+                    {isEarned && (<div className="flex-shrink-0 opacity-70"><svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg></div>)}
+                </div>
+            );
+            return (
+                <div className="space-y-12">
+                    <section className="bg-white p-8 rounded-xl shadow-lg text-center"><h1 className="text-4xl font-extrabold text-slate-800">Mi Ruta Cultural</h1><p className="mt-2 text-lg text-slate-600">Este es tu centro de progreso en la transformación cultural de la organización.</p><div className="mt-6 bg-yellow-100 text-yellow-800 inline-flex items-center text-2xl font-bold px-6 py-3 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>{points} Puntos Totales</div></section>
+                    {suggestedActivity && <SuggestedActivity activity={suggestedActivity.activity} pillar={suggestedActivity.pillar} onNavigate={onNavigate} />}
+                    <section><JourneyMap progressData={journeyMapData} /></section>
+                    <section><h2 className="text-3xl font-bold text-slate-800 mb-6">Insignias y logros</h2><div className="grid grid-cols-1 md:grid-cols-2 gap-5">{Object.values(BADGES).map(badge => (<Badge key={badge.id} badge={badge} isEarned={earnedBadgeIds.has(badge.id)} />))}</div></section>
+                    <section><h2 className="text-3xl font-bold text-slate-800 mb-6">Mi perfil y gestión de datos</h2>
+                         <div className="bg-white p-6 rounded-xl shadow-lg divide-y divide-slate-200">
+                            <div className="py-6"><h3 className="text-xl font-bold text-slate-800">Mi perfil</h3><div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-slate-50 rounded-lg"><div><p className="text-sm text-slate-500">Sesión iniciada como:</p><p className="font-bold text-lg text-slate-800">{userName} <span className="font-normal text-base text-slate-600">({division})</span></p><p className="text-sm text-slate-500">{email}</p></div><button onClick={logout} className="inline-flex items-center justify-center space-x-2 bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1.75-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z" clipRule="evenodd" /></svg><span>Cerrar sesión y reiniciar</span></button></div><p className="text-xs text-slate-500 mt-2">¡Cuidado! Esta acción borrará permanentemente todo tu progreso de este navegador.</p></div>
+                             <div className="py-6">
+                                <h3 className="text-xl font-bold text-slate-800">Guardar Progreso</h3>
+                                <p className="text-slate-600 mt-1 mb-4">
+                                    Guarda tu progreso para mantenerlo seguro. Si has configurado una carpeta, se guardará allí; de lo contrario, se descargará un archivo.
+                                </p>
+                                <button 
+                                    onClick={handleSaveBackup}
+                                    disabled={isSaving}
+                                    className="inline-flex items-center justify-center space-x-2 bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+                                    <span>
+                                        {isSaving 
+                                            ? 'Guardando...' 
+                                            : directoryName 
+                                                ? 'Guardar en Carpeta' 
+                                                : 'Descargar Respaldo'}
+                                    </span>
+                                </button>
+                            </div>
+                            <div className="py-6"><h3 className="text-xl font-bold text-slate-800">Ubicación de respaldo automático (Opcional)</h3><p className="text-slate-600 mt-1 mb-4">Configura una carpeta en tu dispositivo para guardar y cargar tu progreso automáticamente. Esto requiere un navegador moderno como Chrome o Edge.</p>{'showDirectoryPicker' in window ? (<><div className="p-4 bg-slate-50 rounded-lg space-y-4"><div><p className="text-sm font-medium text-slate-700">Carpeta configurada:</p><p className="font-bold text-lg text-blue-700">{directoryName || 'Ninguna'}</p></div><div className="flex flex-wrap gap-4"><button onClick={handleSelectDirectory} className="inline-flex items-center justify-center space-x-2 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg><span>{directoryName ? 'Cambiar carpeta' : 'Configurar carpeta'}</span></button>{directoryName && (<button onClick={handleForgetDirectory} className="inline-flex items-center justify-center space-x-2 bg-slate-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg><span>Olvidar carpeta</span></button>)}</div></div></>) : (<div className="p-4 bg-yellow-100 text-yellow-800 rounded-lg"><p className="font-semibold">Tu navegador no es compatible con esta función.</p><p className="text-sm">La gestión automática de carpetas requiere un navegador moderno como Google Chrome o Microsoft Edge.</p></div>)}</div>
+                            <div className="py-6">
+                                <h3 className="text-xl font-bold text-slate-800">Enviar Respaldo por Correo</h3>
+                                <p className="text-slate-600 mt-1 mb-4">Abre tu cliente de correo electrónico predeterminado (como Outlook) con un borrador listo para enviar tu respaldo a una dirección predefinida de la organización.</p>
+                                <button onClick={handleEmailBackup} className="inline-flex items-center justify-center space-x-2 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                                    </svg>
+                                    <span>Enviar Respaldo por Correo</span>
+                                </button>
+                            </div>
+                            <div className="py-6"><h3 className="text-xl font-bold text-slate-800">Restaurar progreso (importar manual)</h3><p className="text-slate-600 mt-1 mb-4">Selecciona tu archivo de respaldo (.txt) para restaurar tu progreso. Esto sobreescribirá cualquier avance actual.</p><div className="space-y-2"><label htmlFor="import-file-input" className="inline-flex items-center justify-center space-x-2 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M4 12v1a3 3 0 003 3h6a3 3 0 003-3v-1a1 1 0 10-2 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-1a1 1 0 10-2 0zm5.293-6.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 001.414 1.414L9 10.414V3a1 1 0 102 0v7.414l1.293-1.293a1 1 0 00-1.414-1.414l-3-3z" /></svg><span>Seleccionar archivo para restaurar</span></label><input id="import-file-input" type="file" className="hidden" accept=".txt,text/plain" onChange={handleRestoreFromFile} /></div></div>
+                        </div>
+                    </section>
+                </div>
+            );
+        };
+        const Resources = () => {
+             const resourcesData = [{ title: "Árbol del cambio", description: "Una guía visual para entender la conexión entre nuestros valores, comportamientos y los resultados deseados.", example: "Ejemplo: Si el VALOR es 'Colaboración', el COMPORTAMIENTO es 'Compartir información abiertamente con otros equipos', y el RESULTADO es 'Proyectos más rápidos y con menos errores'." }, { title: "Diferencia entre clima y cultura", description: "Un documento clave para comprender los conceptos fundamentales que guían nuestra transformación.", example: "Analogía: El Clima es como el tiempo de hoy (soleado, lluvioso), puede cambiar rápido. La Cultura es como la estación del año (verano, invierno), es más profunda y estable." }, { title: "Bitácora de acciones de enlaces", description: "Consulta las iniciativas y el progreso liderado por los Enlaces de Cultura en toda la organización.", example: "Busca en la bitácora para inspirarte. Por ejemplo, podrías ver que el equipo de Tesorería implementó 'reuniones de 5 minutos de reconocimiento' al inicio de la semana." }, { title: "Cápsulas de ejes culturales", description: "Videos cortos y dinámicos que explican cada uno de los seis ejes en detalle.", example: "¿No tienes claro el eje de Agilidad? Ve la cápsula de 2 minutos que resume sus comportamientos clave y te da ideas rápidas para aplicar hoy mismo." }, { title: "Autodiagnóstico de seguridad psicológica", description: "Una herramienta personal para reflexionar y evaluar el nivel de seguridad psicológica en tu entorno de trabajo.", example: "La herramienta te guiará con preguntas como: '¿Siento que puedo proponer una idea loca sin temor a la crítica?' o '¿Se comparten los errores abiertamente en mi equipo como oportunidades de aprendizaje?'." }];
+            const recognitionValuesData = [{ title: "Integridad", behaviors: [ "Es congruente entre sus palabras y sus actos, generando confianza.", "Actúa de conformidad con los principios de la organización, cumpliendo con responsabilidad y lealtad sus labores.", "Cumple sus promesas entendiendo las necesidades de los distintos interesados.", "Toma de decisiones diarias con impacto positivo en otros (liderazgo).", ] }, { title: "Transparencia", behaviors: [ "Se comunica de manera abierta, brindando información honesta.", "Informa, dialoga y da respuesta de forma concreta y eficaz a las peticiones y necesidades de los interesados, sobre su gestión y resultados.", ] }, { title: "Mejora continua", behaviors: [ "Busca nuevas formas de hacer las cosas, experimentando y aprendiendo de los errores para realizar las modificaciones necesarias.", "Se mantiene actualizado e informado sobre tendencias y nuevas formas de hacer las cosas, generando innovación en procesos, productos o servicios.", "Busca aprender y mantenerse en constante aprendizaje y desarrollo, de forma optimista y autodidacta.", "Entrega valor en los productos y servicios que realiza, tomando en cuenta las distintas necesidades y perspectivas.", ] }, { title: "Respeto", behaviors: [ "Escucha los distintos puntos de vista y crea un ambiente en donde se promueve la participación y la apertura.", "Expresa gratitud, reconoce el trabajo de otros.", "Demuestra empatía y escucha atentamente, expresando sus pensamientos y emociones de forma asertiva.", "Procura entender y conocer a las personas, poniendo en práctica la empatía.", ] }, { title: "Compromiso y empoderamiento", behaviors: [ "Busca activamente su autodesarrollo para mejorar sus capacidades y habilidades.", "Comparte ideas, información y buenas prácticas que puedan servir a otros.", "Toma decisiones autónomas y asume responsabilidad por las mismas y acepta salir de su zona de confort para dar solución a problemas nuevos.", "Procura no solo el logro de los objetivos personales, sino también de su equipo y de la organización, haciendo lo necesario para apoyar proactivaente.", ] }, { title: "Mentalidad ágil", behaviors: [ "Promueve la seguridad psicológica, brindando espacio para que las personas expresen sus ideas, preguntas y sugerencias en un ambiente de confianza.", "Confía en las capacidades de otras personas, brindándoles espacio para que muestren sus habilidades.", "Busca realizar su trabajo evitando procesos o procedimientos innecesarios y burocráticos que vayan en contra de la simplicidad.", "Busca de manera proactiva el trabajo colaborativo, dentro y fuera de su división; y motiva a sus compañeros para que también lo hagan.", ] }];
+            const InteractiveResourceCard = ({ title, description, example }) => {
+                const [isOpen, setIsOpen] = useState(false);
+                return (
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-lg">
+                        <button onClick={() => setIsOpen(!isOpen)} className="w-full text-left p-6 hover:bg-slate-50 transition-colors duration-200 flex justify-between items-center">
+                            <div className="pr-4"><h3 className="text-xl font-bold text-blue-700">{title}</h3><p className="mt-2 text-slate-600">{description}</p></div>
+                            <svg className={'flex-shrink-0 h-6 w-6 text-slate-500 transform transition-transform duration-300 ' + (isOpen ? 'rotate-180' : '')} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        {isOpen && (<div className="p-6 border-t border-slate-200 bg-blue-50/50"><h4 className="font-semibold text-slate-800">En la práctica:</h4><p className="mt-2 text-slate-700">{example}</p></div>)}
+                    </div>
+                );
+            };
+            const ValueDefinitionCard = ({ title, behaviors }) => {
+                const [isOpen, setIsOpen] = useState(false);
+                return (
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-lg">
+                        <button onClick={() => setIsOpen(!isOpen)} className="w-full text-left p-6 hover:bg-slate-50 transition-colors duration-200 flex justify-between items-center">
+                            <h3 className="text-xl font-bold text-blue-700">{title}</h3>
+                            <svg className={'flex-shrink-0 h-6 w-6 text-slate-500 transform transition-transform duration-300 ' + (isOpen ? 'rotate-180' : '')} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        {isOpen && (<div className="p-6 border-t border-slate-200 bg-blue-50/50"><h4 className="font-semibold text-slate-800">Comportamientos asociados:</h4><ul className="mt-2 text-slate-700 space-y-1" style={{ listStyleType: 'disc', paddingLeft: '1.5rem' }}>{behaviors.map((behavior, index) => (<li key={index}>{behavior}</li>))}</ul></div>)}
+                    </div>
+                );
+            };
+            const SupportContact = ({ role, description }) => (<div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500"><h4 className="font-bold text-slate-800">{role}</h4><p className="text-sm text-slate-600">{description}</p></div>);
+            return (
+                <div className="space-y-12">
+                    <section className="text-center"><h1 className="text-4xl font-extrabold text-slate-800">Recursos y Apoyo</h1><p className="mt-3 max-w-2xl mx-auto text-lg text-slate-600">Aquí encontrarás materiales y contactos clave para apoyarte en tu viaje de transformación cultural.</p></section>
+                    <section><h2 className="text-3xl font-bold text-slate-800 mb-6">Materiales disponibles</h2><div className="grid grid-cols-1 md:grid-cols-2 gap-6">{resourcesData.map(resource => (<InteractiveResourceCard key={resource.title} title={resource.title} description={resource.description} example={resource.example} />))}</div></section>
+                    <section><h2 className="text-3xl font-bold text-slate-800 mb-6">Valores para el reconocimiento</h2><div className="grid grid-cols-1 md:grid-cols-2 gap-6">{recognitionValuesData.map(value => (<ValueDefinitionCard key={value.title} title={value.title} behaviors={value.behaviors} />))}</div></section>
+                    <section><h2 className="text-3xl font-bold text-slate-800 mb-6">¿Necesitas ayuda?</h2><div className="bg-white p-8 rounded-xl shadow-lg"><p className="text-slate-700 mb-6">No estás solo en este proceso. Cuentas con una red de apoyo dedicada a facilitar esta transformación. ¡No dudes en contactarlos!</p><div className="space-y-4"><SupportContact role="Tus Colegas Enlaces" description="Son tu primer punto de contacto, facilitadores y campeones de la cultura en tu área." /><SupportContact role="Compañeros de División" description="Colabora con tus pares. Juntos pueden implementar actividades y apoyarse mutuamente." /><SupportContact role="Equipo de Cultura" description="El equipo de Cultura y Talento lidera la estrategia y puede ofrecerte recursos adicionales." /></div></div></section>
+                </div>
+            );
+        };
+        const Glossary = () => {
+            const [searchTerm, setSearchTerm] = useState('');
+            const [activeCategory, setActiveCategory] = useState('Todos');
+            const categories = ['Todos', 'Eje cultural', 'Actividad o práctica', 'Concepto clave'];
+            const filteredData = useMemo(() => {
+                return glossaryData
+                    .filter(item => (activeCategory === 'Todos' || item.category === activeCategory))
+                    .filter(item => item.term.toLowerCase().includes(searchTerm.toLowerCase()) || item.definition.toLowerCase().includes(searchTerm.toLowerCase()))
+                    .sort((a, b) => a.term.localeCompare(b.term));
+            }, [searchTerm, activeCategory]);
+            const CategoryPill = ({ category }) => {
+                const categoryColors = { 'Eje cultural': 'bg-blue-100 text-blue-800', 'Actividad o práctica': 'bg-purple-100 text-purple-800', 'Concepto clave': 'bg-green-100 text-green-800' };
+                return (<span className={'px-2 py-1 text-xs font-medium rounded-full ' + categoryColors[category]}>{category}</span>);
+            };
+            const GlossaryItem = ({ item }) => (
+                <details className="bg-white rounded-lg shadow-sm overflow-hidden group">
+                    <summary className="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50"><div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4"><h3 className="font-bold text-slate-800 text-lg">{item.term}</h3><CategoryPill category={item.category} /></div><svg className="h-6 w-6 text-slate-500 transform transition-transform duration-300 group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></summary>
+                    <div className="p-4 border-t border-slate-200"><p className="text-slate-600">{item.definition}</p></div>
+                </details>
+            );
+            return (
+                <div className="space-y-12">
+                    <section className="text-center"><h1 className="text-4xl font-extrabold text-slate-800">Glosario de la Cultura</h1><p className="mt-3 max-w-2xl mx-auto text-lg text-slate-600">Un diccionario centralizado para todos los conceptos, ejes y prácticas de nuestra transformación cultural.</p></section>
+                    <section className="sticky top-16 bg-slate-50/80 backdrop-blur-sm z-40 py-4 -my-4"><div className="space-y-4"><input type="search" placeholder="Busca un término..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full p-3 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" /><div className="flex flex-wrap gap-2 justify-center">{categories.map(category => (<button key={category} onClick={() => setActiveCategory(category)} className={'px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 ' + (activeCategory === category ? 'bg-blue-600 text-white shadow' : 'bg-white text-slate-700 hover:bg-slate-200')}>{category}</button>))}</div></div></section>
+                    <section className="mt-8">{filteredData.length > 0 ? (<div className="space-y-4">{filteredData.map(item => (<GlossaryItem key={item.term} item={item} />))}</div>) : (<div className="text-center bg-white p-8 rounded-lg shadow-md"><h3 className="text-xl font-semibold text-slate-700">No se encontraron resultados</h3><p className="text-slate-500 mt-2">Intenta ajustar tu búsqueda o filtro de categoría.</p></div>)}</section>
+                </div>
+            );
+        };
+        
+        const Onboarding = () => {
+            const { completeOnboarding } = useAuth();
+            const [step, setStep] = useState(0);
+            const [highlightStyle, setHighlightStyle] = useState({ opacity: 0 });
+            const [tooltipStyle, setTooltipStyle] = useState({ opacity: 0 });
+            const tooltipRef = useRef(null);
+            const steps = useMemo(() => [
+                { title: '¡Bienvenido/a a tu ruta cultural!', content: 'Este es un viaje para construir juntos la cultura que deseamos en la organización. Permítenos mostrarte cómo funciona.', targetId: null },
+                { title: 'Los seis ejes culturales', content: 'Estos son los pilares de nuestra transformación. Haz clic en cada uno para explorar sus comportamientos y actividades.', targetId: 'onboarding-pillars' },
+                { title: 'Tu progreso', content: 'Aquí verás los puntos que ganas al completar actividades. ¡Cada punto cuenta para la transformación!', targetId: 'onboarding-points' },
+                { title: 'Tus metas personales', content: 'Además de las actividades sugeridas, puedes establecer tus propios objetivos para crecer y alinearte con la nueva cultura.', targetId: 'onboarding-goals' },
+                { title: '¡Todo listo!', content: 'Ya estás listo para comenzar tu ruta. ¡Explora, participa y sé protagonista del cambio!', targetId: null }
+            ], []);
+            useLayoutEffect(() => {
+                const updatePosition = () => {
+                    const currentStep = steps[step];
+                    const elem = currentStep.targetId ? document.getElementById(currentStep.targetId) : null;
+                    const tooltipEl = tooltipRef.current;
+                    if (!tooltipEl) return;
+                    if (elem) {
+                        const targetRect = elem.getBoundingClientRect();
+                        const tooltipRect = tooltipEl.getBoundingClientRect();
+                        const margin = 15;
+                        setHighlightStyle({ width: `${targetRect.width + 20}px`, height: `${targetRect.height + 20}px`, top: `${targetRect.top - 10}px`, left: `${targetRect.left - 10}px`, opacity: 1 });
+                        let finalTooltipStyle = {};
+                        const spaceBelow = window.innerHeight - targetRect.bottom;
+                        if (spaceBelow > tooltipRect.height + margin) {
+                            finalTooltipStyle.top = `${targetRect.bottom + margin}px`;
+                        } else {
+                            finalTooltipStyle.top = `${targetRect.top - tooltipRect.height - margin}px`;
+                        }
+                        let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+                        if (left < margin) left = margin;
+                        if (left + tooltipRect.width > window.innerWidth) left = window.innerWidth - tooltipRect.width - margin;
+                        finalTooltipStyle.left = `${left}px`;
+                        finalTooltipStyle.opacity = 1;
+                        setTooltipStyle(finalTooltipStyle);
+                    } else {
+                        setHighlightStyle({ top: '50%', left: '50%', width: 0, height: 0, opacity: 0 });
+                        setTooltipStyle({ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 1 });
+                    }
+                };
+                const timer = setTimeout(updatePosition, 150);
+                window.addEventListener('resize', updatePosition);
+                window.addEventListener('scroll', updatePosition);
+                return () => { clearTimeout(timer); window.removeEventListener('resize', updatePosition); window.removeEventListener('scroll', updatePosition); };
+            }, [step, steps]);
+            const handleNext = () => (step < steps.length - 1) ? setStep(s => s + 1) : completeOnboarding();
+            const handlePrev = () => (step > 0) ? setStep(s => s - 1) : undefined;
+            const currentStep = steps[step];
+            return (
+                <div className="fixed inset-0 z-50">
+                    <div className="onboarding-highlight" style={highlightStyle}></div>
+                    <div ref={tooltipRef} className="onboarding-tooltip" style={tooltipStyle}>
+                        <h3 className="text-xl font-bold text-slate-800">{currentStep.title}</h3><p className="mt-2 text-slate-600">{currentStep.content}</p>
+                        <div className="mt-6 flex justify-between items-center"><span className="text-sm text-slate-500">{step + 1} / {steps.length}</span><div>{step > 0 && <button onClick={handlePrev} className="text-sm font-semibold text-slate-600 px-4 py-2 rounded-md hover:bg-slate-100">Anterior</button>}<button onClick={handleNext} className="bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">{step === steps.length - 1 ? 'Finalizar Tour' : 'Siguiente'}</button></div></div>
+                    </div>
+                </div>
+            );
+        };
+        const Confetti = () => {
+            const [pieces, setPieces] = useState([]);
+            useEffect(() => {
+                const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#14B8A6'];
+                const newPieces = Array.from({ length: 100 }).map((_, i) => {
+                    const style = { left: `${Math.random() * 100}%`, backgroundColor: colors[Math.floor(Math.random() * colors.length)], animationDelay: `${Math.random() * 4}s`, transform: `rotate(${Math.random() * 360}deg)` };
+                    return <div key={i} className="confetti" style={style}></div>;
+                });
+                setPieces(newPieces);
+            }, []);
+            return <div className="confetti-container">{pieces}</div>;
+        };
+        const CelebrationModal = ({ celebration, onClose }) => {
+            const { type, data } = celebration;
+            const isBadge = type === 'badge';
+            const badge = data;
+            return (
+                <div className="fixed inset-0 bg-slate-800/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose} role="dialog" aria-modal="true">
+                    <Confetti />
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg text-center p-8 md:p-12 transform transition-all scale-100" onClick={e => e.stopPropagation()}>
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-slate-800">¡Felicidades!</h2>
+                        {isBadge ? (<><p className="mt-3 text-lg text-slate-600">¡Has obtenido una nueva insignia!</p><div className={`mt-6 inline-flex flex-col items-center justify-center p-6 rounded-xl ${badge.colorClasses}`}><div className={badge.iconColorClasses}>{cloneElement(badge.icon, {className: "h-16 w-16"})}</div><h3 className="mt-4 text-2xl font-bold">{badge.name}</h3><p className="mt-1 opacity-90">{badge.description}</p></div></>) : (<><p className="mt-3 text-lg text-slate-600">Completaste una actividad y ganaste puntos:</p><div className="mt-6 bg-yellow-100 text-yellow-800 inline-flex flex-col items-center justify-center p-6 rounded-xl"><h3 className="text-xl font-bold">{data.title}</h3><p className="mt-2 text-3xl font-extrabold">+{data.points} Puntos</p></div></>)}
+                        <button onClick={onClose} className="mt-8 bg-slate-800 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition-colors w-full sm:w-auto">¡Genial!</button>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- New Environment Warning Component ---
+        const EnvironmentWarning = () => {
+            const [visible, setVisible] = useState(false);
+            useEffect(() => {
+                if (window.location.protocol === 'file:') {
+                    setVisible(true);
+                }
+            }, []);
+            if (!visible) return null;
+            return (
+                <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-4 mx-4 mt-4 rounded shadow-md relative text-left" role="alert">
+                    <p className="font-bold">Aviso de entorno local</p>
+                    <p>Estás ejecutando la aplicación directamente desde un archivo (protocolo <code>file://</code>).</p>
+                    <p>Algunas funciones avanzadas (como el respaldo automático) pueden estar limitadas por seguridad del navegador.</p>
+                    <p className="mt-2 text-sm">Para la mejor experiencia, te recomendamos usar un servidor local.</p>
+                    <button onClick={() => setVisible(false)} className="absolute top-0 bottom-0 right-0 px-4 py-3">
+                        <svg className="fill-current h-6 w-6 text-orange-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Cerrar</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                    </button>
+                </div>
+            );
+        };
+
+        const App = () => {
+          const { userName, showOnboarding } = useAuth();
+          const { celebration, clearCelebration } = useGamification();
+          const [currentView, setCurrentView] = useState('home');
+          const handleNavigate = (view) => {
+            setCurrentView(view);
+            window.scrollTo(0, 0);
+          };
+          const currentPillar = useMemo(() => {
+            if (currentView !== 'home' && currentView !== 'dashboard' && currentView !== 'resources' && currentView !== 'glossary') {
+              return pillarsData.find(p => p.id === currentView);
+            }
+            return undefined;
+          }, [currentView]);
+          if (!userName) {
+            return <Login />;
+          }
+          return (
+            <div className="min-h-screen flex flex-col bg-slate-50">
+              <EnvironmentWarning />
+              <Header onNavigate={handleNavigate} currentView={currentView} />
+              <main key={currentView} className="flex-grow container mx-auto px-4 py-8 md:py-12 content-fade-in">
+                {currentView === 'home' && <Home onNavigate={handleNavigate} />}
+                {currentView === 'dashboard' && <Dashboard onNavigate={handleNavigate} />}
+                {currentView === 'resources' && <Resources />}
+                {currentView === 'glossary' && <Glossary />}
+                {currentPillar && <PillarPage pillar={currentPillar} />}
+              </main>
+              <footer className="bg-slate-800 text-white py-6 text-center">
+                <p>&copy; {new Date().getFullYear()} Organización. Todos los derechos reservados.</p>
+                <p className="text-sm text-slate-400 mt-1">Impulsando nuestra cultura, juntos.</p>
+              </footer>
+              {showOnboarding && <Onboarding />}
+              {celebration && <CelebrationModal celebration={celebration} onClose={clearCelebration} />}
+            </div>
+          );
+        };
+
+        const rootElement = document.getElementById('root');
+        if (!rootElement) {
+          throw new Error("Could not find root element to mount to");
+        }
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(
+          <StrictMode>
+            <AuthProvider>
+              <GamificationProvider>
+                <App />
+              </GamificationProvider>
+            </AuthProvider>
+          </StrictMode>
+        );
+    </script>
+</body>
+</html>
