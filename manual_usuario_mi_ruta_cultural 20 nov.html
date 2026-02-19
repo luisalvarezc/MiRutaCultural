@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - Ruta de Transformación Cultural</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <header class="bg-slate-900 text-white py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl font-extrabold">Manual de Usuario</h1>
+            <p class="mt-2 text-slate-400">Guía completa para navegar tu Ruta de Transformación Cultural</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12 max-w-4xl space-y-6">
+        
+        <!-- Sección 1: Inicio -->
+        <details class="bg-white rounded-xl shadow-lg group" open>
+            <summary class="p-6 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors">
+                <h2 class="text-2xl font-bold text-slate-800 group-open:text-blue-600 transition-colors">1. Primeros Pasos y Acceso</h2>
+                <svg class="h-6 w-6 text-slate-500 transform transition-transform duration-300 group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </summary>
+            <div class="p-6 border-t border-slate-200 prose text-slate-600">
+                <p>Bienvenido a la plataforma. Al ingresar por primera vez, encontrarás una pantalla de inicio de sesión.</p>
+                <ul class="list-disc pl-5 space-y-2 mt-2">
+                    <li><strong>Perfil Personalizado:</strong> Ingresa tu Nombre, Correo Electrónico (institucional) y División.</li>
+                    <li><strong>Almacenamiento Local:</strong> Toda tu información se guarda exclusivamente en tu navegador actual. No usamos servidores externos para proteger tu privacidad.</li>
+                    <li><strong>Tour de Bienvenida:</strong> Al iniciar, un tour interactivo te mostrará las secciones principales: Ejes Culturales, Puntos y Objetivos.</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- Sección 2: Dashboard -->
+        <details class="bg-white rounded-xl shadow-lg group">
+            <summary class="p-6 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors">
+                <h2 class="text-2xl font-bold text-slate-800 group-open:text-blue-600 transition-colors">2. Mi Ruta Cultural (Dashboard)</h2>
+                <svg class="h-6 w-6 text-slate-500 transform transition-transform duration-300 group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </summary>
+            <div class="p-6 border-t border-slate-200 prose text-slate-600">
+                <p>El Dashboard es tu centro de comando. Aquí podrás visualizar:</p>
+                <ul class="list-disc pl-5 space-y-2 mt-2">
+                    <li><strong>Progreso General:</strong> Barras de avance para cada uno de los 6 ejes culturales.</li>
+                    <li><strong>Puntos y Racha:</strong> Tu puntaje total acumulado y tu racha de semanas consecutivas participando.</li>
+                    <li><strong>Insignias:</strong> Medallas virtuales que desbloqueas al completar hitos importantes.</li>
+                    <li><strong>Actividad Sugerida:</strong> Una recomendación inteligente basada en tu progreso actual para que siempre sepas qué hacer a continuación.</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- Sección 3: Gestión de Datos -->
+        <details class="bg-white rounded-xl shadow-lg group">
+            <summary class="p-6 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors">
+                <h2 class="text-2xl font-bold text-slate-800 group-open:text-blue-600 transition-colors">3. Guardar y Restaurar Progreso</h2>
+                <svg class="h-6 w-6 text-slate-500 transform transition-transform duration-300 group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </summary>
+            <div class="p-6 border-t border-slate-200 prose text-slate-600">
+                <p>Dado que la aplicación funciona sin base de datos central, es vital que gestiones tus respaldos:</p>
+                <h4 class="font-bold mt-4 text-slate-800">Opciones de Respaldo:</h4>
+                <ol class="list-decimal pl-5 space-y-2 mt-2">
+                    <li><strong>Carpeta Automática (Recomendado):</strong> Configura una carpeta local en tu PC. La app guardará tu progreso allí automáticamente cada vez que avances.</li>
+                    <li><strong>Archivo Manual:</strong> Descarga un archivo <code>.txt</code> con tu progreso si cambias de computadora.</li>
+                    <li><strong>Correo Electrónico:</strong> Envía tu respaldo por correo oficial para tener una copia en tu buzón.</li>
+                </ol>
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-4 text-sm">
+                    <strong>Nota Importante:</strong> Si borras el historial de tu navegador, perderás el progreso a menos que tengas un respaldo.
+                </div>
+            </div>
+        </details>
+
+        <!-- Sección 4: Explorando un Eje Cultural -->
+        <details class="bg-white rounded-xl shadow-lg group">
+            <summary class="p-6 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors">
+                <h2 class="text-2xl font-bold text-slate-800 group-open:text-blue-600 transition-colors">4. Explorando un Eje Cultural y Ganando Puntos</h2>
+                <svg class="h-6 w-6 text-slate-500 transform transition-transform duration-300 group-open:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </summary>
+            <div class="p-6 border-t border-slate-200 prose text-slate-600">
+                <p>Al hacer clic en un eje (por ejemplo, "Reconocimiento"), entrarás a su página de detalle, donde encontrarás:</p>
+                 <ul class="list-disc pl-5 space-y-2 mt-2">
+                    <li><strong>Descripción y Comportamientos Clave:</strong> Un resumen del propósito del eje y las conductas específicas que buscamos fomentar.</li>
+                    <li><strong>Actividades y Prácticas Sugeridas:</strong> ¡Aquí es donde ocurre la acción! Verás una lista de actividades diseñadas para poner en práctica los comportamientos del eje.</li>
+                </ul>
+                 <div class="my-6 p-6 bg-slate-100 rounded-lg border border-slate-200">
+                    <p class="text-center font-semibold text-slate-700 mb-4">Ejemplo Visual de una Actividad:</p>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden max-w-md mx-auto">
+                      <div class="p-6">
+                        <div class="flex justify-between items-start">
+                          <h4 class="text-xl font-bold text-slate-900 pr-4">Pizarra de Kudos</h4>
+                          <div class="flex-shrink-0 flex items-center bg-yellow-100 text-yellow-800 text-xs font-bold px-2.5 py-1 rounded-full">
+                            25 Puntos
+                          </div>
+                        </div>
+                        <p class="mt-4 text-slate-600 text-sm">Un espacio interactivo para dejar agradecimientos y reconocimientos, especificando el valor observado.</p>
+                      </div>
+                      <div class="bg-green-50 px-6 py-4 flex items-center justify-center space-x-2 text-green-700 font-semibold text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            <span>¡Actividad recurrente activa!</span>
+                      </div>
+                    </div>
+                </div>
+                <p>Existen dos tipos de actividades en la plataforma:</p>
+                <ol class="list-decimal pl-5 space-y-2 mt-2">
+                    <li><strong>Actividades de Completado Único:</strong> (Ej. lecturas o reuniones). Una vez realizadas, pulsas "Marcar como Completado" y recibes tus puntos.</li>
+                    <li><strong>Actividades Recurrentes (Puntos Infinitos):</strong> Actividades especiales como la <em>Pizarra de Kudos</em> no tienen botón de completado manual. Se completan automáticamente al usarlas. <br/><span class="bg-yellow-100 text-yellow-800 px-1 font-semibold rounded">¡Importante!</span> Puedes realizarlas tantas veces como quieras. La primera vez ganas el puntaje base (25 pts), y cada vez subsiguiente ganas un <strong>bono de +5 puntos extra</strong>. ¡Tu participación continua siempre suma!</li>
+                </ol>
+            </div>
+        </details>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center mt-12">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2024 Organización. Todos los derechos reservados.</p>
+            <p class="text-sm mt-2">Impulsando nuestra cultura, juntos.</p>
+        </div>
+    </footer>
+</body>
+</html>
