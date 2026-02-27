@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCCR: Ruta de Transformación Cultural | Apple Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --apple-black: #000000;
+            --apple-dark: #1d1d1f;
+            --apple-gray: #86868b;
+            --apple-blue: #2997ff;
+            --apple-gold: #f5f5f7;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--apple-black);
+            color: var(--apple-gold);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Typography */
+        .hero-title {
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            font-weight: 800;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            font-weight: 700;
+        }
+
+        .gradient-text {
+            background: linear-gradient(180deg, #fff 0%, #86868b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-blue {
+            background: linear-gradient(90deg, #2997ff 0%, #0071e3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Layout */
+        .apple-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .glass-card {
+            background: rgba(29, 29, 31, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: scale(1.02);
+        }
+
+        /* Animations */
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            animation: reveal 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--apple-black); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        /* Nav */
+        nav {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-apple {
+            background-color: var(--apple-blue);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 980px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-apple:hover {
+            background-color: #0077ed;
+            transform: scale(1.05);
+        }
+
+        /* Pillar Grid */
+        .pillar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .pillar-item {
+            height: 400px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* FAQ Accordion */
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .faq-trigger:checked ~ .faq-content {
+            max-height: 200px;
+            padding-bottom: 2rem;
+        }
+        .faq-trigger:checked ~ .faq-header svg {
+            transform: rotate(180deg);
+        }
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="h-12 flex items-center justify-between px-6 md:px-20">
+        <div class="text-white font-semibold text-lg tracking-tight">Ruta Cultural</div>
+        <div class="flex items-center gap-8 text-[12px] text-gray-300 font-normal">
+            <a href="#vision" class="hover:text-white transition-colors">Visión</a>
+            <a href="#ejes" class="hover:text-white transition-colors">Ejes</a>
+            <a href="#logros" class="hover:text-white transition-colors">Logros</a>
+            <a href="https://luisalvarezc.github.io/MiRutaCultural/" class="btn-apple">Empezar ahora</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="min-h-screen flex flex-col items-center justify-center text-center px-4 py-20">
+            <div class="reveal">
+                <span class="text-blue-500 font-semibold tracking-widest text-xs uppercase mb-4 block">NUEVA EXPERIENCIA</span>
+                <h1 class="hero-title gradient-text mb-6">Ruta de Transformación Cultural.</h1>
+                <h2 class="text-3xl md:text-5xl font-medium text-gray-400 mb-12 max-w-4xl mx-auto">
+                    Increíblemente nuestra. <br>
+                    Diseñada para el futuro del BCCR.
+                </h2>
+                <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
+                    <a href="https://bccr-my.sharepoint.com/:v:/g/personal/alvarezcl_bccr_fi_cr/IQCezovUcQM0QJ3Zhk68OKK1ATN4igrfpz6qCsJOfB7T0Lk?e=b2rcOD&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D" target="_blank" class="text-xl text-blue-500 hover:underline flex items-center gap-2">
+                        Ver el video de lanzamiento
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vision Section -->
+        <section id="vision" class="py-32 apple-container text-center scroll-mt-20">
+            <div class="reveal">
+                <span class="text-blue-500 font-semibold tracking-widest text-xs uppercase mb-4 block">NUESTRA PROMESA</span>
+                <h2 class="section-title mb-8">No estamos cambiando procesos. <br><span class="text-gray-500">Estamos evolucionando nuestra forma de colaborar.</span></h2>
+                <p class="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed">
+                    La Ruta Cultural es el puente hacia el Banco que Costa Rica necesita hoy. Un espacio donde la autonomía, el aprendizaje y el reconocimiento se encuentran para potenciar nuestro talento colectivo.
+                </p>
+            </div>
+        </section>
+
+        <!-- Ejes Section -->
+        <section id="ejes" class="py-20 scroll-mt-20">
+            <div class="w-full max-w-6xl mx-auto reveal delay-1 px-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                    <!-- Reconocimiento -->
+                    <div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col text-left border-l-[6px] border-blue-500 transform hover:-translate-y-1 transition-transform duration-300">
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-4 mb-3">
+                                <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 10h4.757a2 2 0 110 4h-4.757M14 10a2 2 0 11-4 0 2 2 0 014 0zm0 0V6a2 2 0 10-4 0v4m4 0V14m-4 0h-4.757a2 2 0 100 4h4.757M10 14v4" /></svg>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900">Reconocimiento</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm leading-relaxed">Fomentar una cultura de aprecio y valoración constante.</p>
+                        </div>
+                        <div class="px-6 py-3 bg-slate-50/50 text-right border-t border-slate-100">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Explorar eje →</span>
+                        </div>
+                    </div>
+
+                    <!-- Liderazgo -->
+                    <div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col text-left border-l-[6px] border-purple-500 transform hover:-translate-y-1 transition-transform duration-300">
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-4 mb-3">
+                                <div class="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012-2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900">Liderazgo</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm leading-relaxed">Desarrollar líderes en todos los niveles de la organización.</p>
+                        </div>
+                        <div class="px-6 py-3 bg-slate-50/50 text-right border-t border-slate-100">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Explorar eje →</span>
+                        </div>
+                    </div>
+
+                    <!-- Agilidad -->
+                    <div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col text-left border-l-[6px] border-green-500 transform hover:-translate-y-1 transition-transform duration-300">
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-4 mb-3">
+                                <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900">Agilidad</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm leading-relaxed">Promover la adaptabilidad, la mejora continua y la experimentación.</p>
+                        </div>
+                        <div class="px-6 py-3 bg-slate-50/50 text-right border-t border-slate-100">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Explorar eje →</span>
+                        </div>
+                    </div>
+
+                    <!-- Aprendizaje -->
+                    <div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col text-left border-l-[6px] border-amber-500 transform hover:-translate-y-1 transition-transform duration-300">
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-4 mb-3">
+                                <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900">Aprendizaje y autodesarrollo</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm leading-relaxed">Cultivar la curiosidad y el compromiso con el crecimiento personal.</p>
+                        </div>
+                        <div class="px-6 py-3 bg-slate-50/50 text-right border-t border-slate-100">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Explorar eje →</span>
+                        </div>
+                    </div>
+
+                    <!-- Empoderamiento -->
+                    <div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col text-left border-l-[6px] border-red-500 transform hover:-translate-y-1 transition-transform duration-300">
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-4 mb-3">
+                                <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1 118 0 9 9 0 01-18 0z" /></svg>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900">Empoderamiento</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm leading-relaxed">Otorgar autonomía, confianza y responsabilidad a los equipos.</p>
+                        </div>
+                        <div class="px-6 py-3 bg-slate-50/50 text-right border-t border-slate-100">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Explorar eje →</span>
+                        </div>
+                    </div>
+
+                    <!-- Seguridad -->
+                    <div class="bg-white rounded-lg shadow-xl overflow-hidden flex flex-col text-left border-l-[6px] border-teal-500 transform hover:-translate-y-1 transition-transform duration-300">
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-4 mb-3">
+                                <div class="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center text-teal-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900">Seguridad psicológica</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm leading-relaxed">Crear un ambiente de confianza para expresarse y tomar riesgos.</p>
+                        </div>
+                        <div class="px-6 py-3 bg-slate-50/50 text-right border-t border-slate-100">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Explorar eje →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid (Bento Style) -->
+        <section class="py-32 apple-container">
+            <h2 class="section-title mb-20 text-center">Todo lo que necesitas <br><span class="gradient-blue">para ser protagonista del cambio.</span></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Large Feature -->
+                <div class="md:col-span-8 glass-card p-12 min-h-[500px] flex flex-col justify-end relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-3xl font-bold mb-4">Seis Ejes. Una Visión.</h3>
+                        <p class="text-gray-400 text-lg max-w-md">Explora comportamientos clave y actividades prácticas diseñadas para transformar nuestra cultura desde adentro.</p>
+                    </div>
+                    <div class="absolute top-0 right-0 p-12 opacity-20">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-64 h-64"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                    </div>
+                </div>
+
+                <!-- Small Feature -->
+                <div class="md:col-span-4 glass-card p-12 flex flex-col justify-center items-center text-center">
+                    <div class="w-20 h-20 bg-blue-600 rounded-2xl mb-6 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9a9.75 9.75 0 0 1 0-18h9a9.75 9.75 0 0 1 0 18Z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Tu crecimiento, visible</h3>
+                    <p class="text-gray-400">Gana puntos, desbloquea insignias y celebra cada paso de tu evolución.</p>
+                </div>
+
+                <!-- Small Feature -->
+                <div class="md:col-span-4 glass-card p-12 flex flex-col justify-center items-center text-center">
+                    <div class="w-20 h-20 bg-purple-600 rounded-2xl mb-6 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 text-white"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Gracias con propósito</h3>
+                    <p class="text-gray-400">Reconoce el talento y los valores de tus compañeros al instante.</p>
+                </div>
+
+                <!-- Large Feature -->
+                <div class="md:col-span-8 glass-card p-12 min-h-[500px] flex flex-col justify-end bg-gradient-to-br from-zinc-900 to-black">
+                    <h3 class="text-3xl font-bold mb-4">Tu Viaje Personal</h3>
+                    <p class="text-gray-400 text-lg max-w-md">Establece tus propios objetivos y monitorea tu impacto en tiempo real con un panel de control intuitivo.</p>
+                    <div class="mt-8 flex gap-2">
+                        <div class="h-1 w-20 bg-blue-500 rounded-full"></div>
+                        <div class="h-1 w-12 bg-gray-700 rounded-full"></div>
+                        <div class="h-1 w-8 bg-gray-700 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metrics Section -->
+        <section id="logros" class="py-20 bg-zinc-900/50 border-y border-white/5 scroll-mt-20">
+            <div class="apple-container flex flex-col md:flex-row items-center justify-between gap-12 text-center md:text-left">
+                <div class="reveal">
+                    <h2 class="text-5xl md:text-7xl font-extrabold gradient-text">Más de 70</h2>
+                    <p class="text-xl text-blue-500 font-medium mt-2">reportes de uso generados</p>
+                </div>
+                <div class="reveal delay-1 max-w-md">
+                    <p class="text-2xl text-gray-300 font-medium leading-tight">
+                        La transformación ya comenzó. Cada acción cuenta, <span class="text-white">suma con el tuyo.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detail Section -->
+        <section class="py-32 bg-white text-black">
+            <div class="apple-container">
+                <div class="grid md:grid-cols-2 gap-20 items-center">
+                    <div>
+                        <span class="text-blue-600 font-bold text-sm tracking-widest uppercase mb-4 block">INTERACTIVIDAD</span>
+                        <h2 class="text-5xl font-extrabold mb-8 tracking-tight">No solo leas. <br>Participa.</h2>
+                        <p class="text-xl text-gray-600 mb-10 leading-relaxed">
+                            Hemos creado herramientas dinámicas como el <strong>Perfection Game</strong> y la <strong>Pizarra de Kudos</strong> para que la cultura no sea algo que se estudia, sino algo que se vive.
+                        </p>
+                        <ul class="space-y-6">
+                            <li class="flex items-start gap-4">
+                                <div class="mt-1 bg-blue-100 p-2 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 text-blue-600"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></div>
+                                <div>
+                                    <h4 class="font-bold text-lg">Feedback Constructivo</h4>
+                                    <p class="text-gray-500">Aprende a dar y recibir retroalimentación de valor.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div class="mt-1 bg-blue-100 p-2 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 text-blue-600"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg></div>
+                                <div>
+                                    <h4 class="font-bold text-lg">Reconocimiento Social</h4>
+                                    <p class="text-gray-500">Celebra los éxitos de tu equipo públicamente.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="relative">
+                        <div class="bg-gray-100 rounded-[40px] p-8 aspect-square flex items-center justify-center overflow-hidden shadow-2xl">
+                             <div class="text-center">
+                                 <div class="text-8xl mb-4">✨</div>
+                                 <div class="text-2xl font-bold text-gray-400">Experiencia Inmersiva</div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="py-32 apple-container">
+            <div class="reveal text-center mb-20">
+                <h2 class="section-title">Preguntas que nos unen.</h2>
+            </div>
+            <div class="max-w-3xl mx-auto space-y-4">
+                <div class="faq-item reveal">
+                    <input type="checkbox" id="faq-1" class="faq-trigger hidden">
+                    <label for="faq-1" class="faq-header flex items-center justify-between py-6 cursor-pointer group">
+                        <span class="text-xl font-semibold group-hover:text-blue-500 transition-colors">¿Cuánto tiempo me tomará?</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 transition-transform duration-300"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                    </label>
+                    <div class="faq-content">
+                        <p class="text-gray-400 text-lg">Tú marcas el ritmo. La cultura no es una tarea adicional, se vive en los pequeños gestos diarios y en cómo decidimos colaborar cada mañana.</p>
+                    </div>
+                </div>
+                <div class="faq-item reveal delay-1">
+                    <input type="checkbox" id="faq-2" class="faq-trigger hidden">
+                    <label for="faq-2" class="faq-header flex items-center justify-between py-6 cursor-pointer group">
+                        <span class="text-xl font-semibold group-hover:text-blue-500 transition-colors">¿Es obligatorio participar?</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 transition-transform duration-300"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+                    </label>
+                    <div class="faq-content">
+                        <p class="text-gray-400 text-lg">Es una invitación a ser protagonista, no un espectador. La transformación del BCCR depende de la suma de nuestras voluntades.</p>
+                    </div>
+                </div>
+                <div class="faq-item reveal delay-2">
+                    <input type="checkbox" id="faq-3" class="faq-trigger hidden">
+                    <label for="faq-3" class="faq-header flex items-center justify-between py-6 cursor-pointer group">
+                        <span class="text-xl font-semibold group-hover:text-blue-500 transition-colors">¿Qué gano con esto?</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 transition-transform duration-300"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></label>
+                    <div class="faq-content">
+                        <p class="text-gray-400 text-lg">Un entorno de trabajo más saludable, mayor reconocimiento por tu esfuerzo y la satisfacción de construir el futuro de nuestra institución.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Start Guide -->
+        <section class="py-32 bg-zinc-900/30">
+            <div class="apple-container text-center">
+                <div class="reveal mb-20">
+                    <h2 class="section-title">Empieza en segundos.</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div class="reveal">
+                        <div class="text-4xl font-bold text-blue-500 mb-4">1</div>
+                        <h4 class="text-xl font-bold mb-2">Entra</h4>
+                        <p class="text-gray-400">Accede con tus credenciales institucionales desde cualquier dispositivo.</p>
+                    </div>
+                    <div class="reveal delay-1">
+                        <div class="text-4xl font-bold text-blue-500 mb-4">2</div>
+                        <h4 class="text-xl font-bold mb-2">Explora</h4>
+                        <p class="text-gray-400">Descubre el eje cultural que más te inspire o necesites hoy.</p>
+                    </div>
+                    <div class="reveal delay-2">
+                        <div class="text-4xl font-bold text-blue-500 mb-4">3</div>
+                        <h4 class="text-xl font-bold mb-2">Actúa</h4>
+                        <p class="text-gray-400">Completa actividades, suma puntos y transforma tu entorno.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="py-40 text-center">
+            <div class="reveal">
+                <h2 class="hero-title mb-12">¿Listo para empezar?</h2>
+                <p class="text-2xl text-gray-400 mb-12 max-w-2xl mx-auto">Únete a cientos de compañeros que ya están transformando el BCCR.</p>
+                <a href="https://luisalvarezc.github.io/MiRutaCultural/" class="inline-block bg-white text-black font-bold text-xl py-5 px-12 rounded-full hover:scale-105 transition-transform">
+                    Entrar a mi Ruta Cultural
+                </a>
+                <div class="mt-8">
+                    <a href="#" class="text-blue-500 hover:underline">O conoce más sobre los ejes culturales ></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-20 border-t border-white/10 text-center text-gray-500 text-sm">
+        <div class="apple-container">
+            <p class="mb-4">© 2024 Banco Central de Costa Rica. Todos los derechos reservados.</p>
+            <div class="flex justify-center gap-8">
+                <a href="#" class="hover:text-white transition-colors">Privacidad</a>
+                <a href="#" class="hover:text-white transition-colors">Términos</a>
+                <a href="#" class="hover:text-white transition-colors">Soporte</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple reveal on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
